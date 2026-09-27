@@ -1,0 +1,32 @@
+<footer class="footer" role="contentinfo">
+  <div class="footer__inner container">
+    <div class="footer__meta">
+      {%- if section.settings.show_localization -%}
+        {%- render 'localization-form' -%}
+      {%- endif -%}
+
+      {%- if section.settings.show_payment_icons -%}
+        <div class="footer__payments">
+          <span class="visually-hidden">{{ 'footer.payment_methods' | t }}</span>
+          {%- for type in shop.enabled_payment_types -%}
+            {{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <p class="footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ powered_by_link }}
+    </p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "checkbox", "id": "show_localization", "label": "Show country/language selectors", "default": true },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true }
+  ]
+}
+{% endschema %}

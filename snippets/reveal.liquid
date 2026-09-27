@@ -1,0 +1,64 @@
+{%- comment -%}
+  Wraps content in a scroll-reveal container.
+  Content is fully visible by default (progressive enhancement).
+  When JS runs, elements are hidden, then revealed on scroll.
+
+  @param {string} content - The content to wrap (pass via capture)
+  @param {string} [variant] - 'single' | 'stagger' (default: 'single')
+  @param {number} [delay] - Stagger delay in ms between children (default: 80)
+  @param {string} [class] - Additional CSS classes
+  @param {string} [threshold] - IntersectionObserver threshold (default: 0.15)
+  @param {string} [tag] - HTML tag for the wrapper (default: 'div')
+  @param {string} [aria_label] - Optional aria-label
+  @param {boolean} [no_reveal] - Opt out of reveal (renders content plainly)
+
+  @example
+    {%- capture hero_content -%}
+      <h1>Welcome</h1>
+      <p>A slower way to browse.</p>
+    {%- endcapture -%}
+    {% render 'reveal', content: hero_content, variant: 'stagger' %}
+
+  @example
+    {%- capture product_grid -%}
+      {%- for product in collection.products -%}
+        {% render 'product-card', product: product %}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {% render 'reveal',
+      content: product_grid,
+      variant: 'stagger',
+      delay: 100,
+      class: 'product-grid'
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign reveal_variant = variant | default: 'single'
+  assign reveal_delay = delay | default: 80
+  assign reveal_threshold = threshold | default: 0.15
+  assign reveal_tag = tag | default: 'div'
+
+  assign reveal_class = 'reveal'
+  if reveal_variant == 'stagger'
+    assign reveal_class = reveal_class | append: ' reveal--stagger'
+  endif
+  if class != blank
+    assign reveal_class = reveal_class | append: ' ' | append: class
+  endif
+-%}
+
+{%- if no_reveal -%}
+  {{ content }}
+{%- else -%}
+  <{{ reveal_tag }}
+    class="{{ reveal_class }}"
+    data-reveal
+    data-reveal-variant="{{ reveal_variant }}"
+    data-reveal-delay="{{ reveal_delay }}"
+    data-reveal-threshold="{{ reveal_threshold }}"
+    {% if aria_label %}aria-label="{{ aria_label | escape }}"{% endif %}
+  >
+    {{ content }}
+  </{{ reveal_tag }}>
+{%- endif -%}

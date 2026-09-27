@@ -1,0 +1,28 @@
+{%- comment -%}
+  Breadcrumb + contextual next step.
+  Renders on every template for WCAG 2.4.8 (Location).
+
+  @param {array} path - Array of {label, url} objects
+  @param {object} [next_step] - {label, url}
+{%- endcomment -%}
+
+<nav class="wayfinder" aria-label="Breadcrumb">
+  <ol class="wayfinder__path">
+    {%- for crumb in path -%}
+      <li class="wayfinder__crumb">
+        {%- if crumb.url -%}
+          <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+        {%- else -%}
+          <span aria-current="page">{{ crumb.label }}</span>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ol>
+
+  {%- if next_step -%}
+    <a href="{{ next_step.url }}" class="wayfinder__next">
+      {{ next_step.label }}
+      <span aria-hidden="true">&#8594;</span>
+    </a>
+  {%- endif -%}
+</nav>

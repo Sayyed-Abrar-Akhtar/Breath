@@ -1,0 +1,45 @@
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close": "Close",
+    "menu": "Menu",
+    "search": "Search",
+    "cart": "Cart",
+    "account": "Account",
+    "previous": "Previous",
+    "next": "Next",
+    "loading": "Loading"
+  },
+  "general": {
+    "home": "Home",
+    "navigation": "Navigation",
+    "site_index": "The Index",
+    "open_index": "Open index",
+    "next_step": "Next step",
+    "continue": "Continue",
+    "explore": "Explore"
+  },
+  "search": {
+    "placeholder": "Search",
+    "submit": "Search",
+    "no_results": "No results for \"{{ terms }}\"",
+    "results_with_count": {
+      "one": "{{ count }} result",
+      "other": "{{ count }} results"
+    }
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue shopping",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "quantity": "Quantity",
+    "remove": "Remove"
+  },
+  "footer": {
+    "localization": "Country/region",
+    "language": "Language",
+    "payment_methods": "Payment methods"
+  }
+}

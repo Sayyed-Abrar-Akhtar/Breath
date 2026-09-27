@@ -1,0 +1,92 @@
+{%- comment -%}
+  Full-screen Editorial Index overlay.
+  Renders a link_list up to 3 levels deep as a typographic index.
+{%- endcomment -%}
+
+<div
+  class="site-index"
+  data-site-index
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="site-index-title"
+>
+  <div class="site-index__header container">
+    <h2 class="site-index__title" id="site-index-title">
+      {{ section.settings.heading | default: 'The Index' }}
+    </h2>
+    <button
+      type="button"
+      class="site-index__close"
+      data-site-index-close
+      aria-label="{{ 'accessibility.close' | t }}"
+    >
+      {%- render 'icon-close' -%}
+    </button>
+  </div>
+
+  <div class="site-index__body container">
+    {%- if section.settings.menu != blank -%}
+      {%- for link in section.settings.menu.links -%}
+        <div class="site-index__section">
+          <h3 class="site-index__heading">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </h3>
+
+          {%- if link.links.size > 0 -%}
+            <ul class="site-index__list site-index__list--level-2">
+              {%- for child in link.links -%}
+                <li class="site-index__item">
+                  <a href="{{ child.url }}" class="site-index__link">
+                    <span class="site-index__label">{{ child.title }}</span>
+                    <span class="site-index__leader" aria-hidden="true"></span>
+                    {%- if child.object.products_count -%}
+                      <span class="site-index__meta">{{ child.object.products_count }}</span>
+                    {%- endif -%}
+                  </a>
+
+                  {%- if child.links.size > 0 -%}
+                    <ul class="site-index__list site-index__list--level-3">
+                      {%- for grandchild in child.links -%}
+                        <li class="site-index__item">
+                          <a href="{{ grandchild.url }}" class="site-index__link">
+                            <span class="site-index__label">{{ grandchild.title }}</span>
+                            <span class="site-index__leader" aria-hidden="true"></span>
+                            {%- if grandchild.object.products_count -%}
+                              <span class="site-index__meta">{{ grandchild.object.products_count }}</span>
+                            {%- endif -%}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Site Index",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Index"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu",
+      "info": "Supports up to 3 levels of nesting."
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,17 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "header": {
+      "type": "header",
+      "settings": {
+        "sticky": true,
+        "show_search": true,
+        "show_account": true,
+        "show_cart": true,
+        "index_label": "Index"
+      }
+    }
+  },
+  "order": ["header"]
+}

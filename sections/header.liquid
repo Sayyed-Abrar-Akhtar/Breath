@@ -1,0 +1,68 @@
+<header class="header{% if section.settings.sticky %} header--sticky{% endif %}" role="banner">
+  <div class="header__inner container">
+    <a href="{{ routes.root_url }}" class="header__logo">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 240 | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: shop.name
+        }}
+      {%- else -%}
+        <span class="header__shop-name">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <div class="header__actions">
+      {%- if section.settings.show_search -%}
+        <a
+          href="{{ routes.search_url }}"
+          class="header__action"
+          aria-label="{{ 'accessibility.search' | t }}"
+        >
+          {%- render 'icon-search' -%}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <div class="header__action header__action--account">
+          {{ 'customer' | login_button }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_cart -%}
+        <a
+          href="{{ routes.cart_url }}"
+          class="header__action header__action--cart"
+          aria-label="{{ 'accessibility.cart' | t }}"
+        >
+          <span class="header__cart-label">{{ 'cart.title' | t }}</span>
+          <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
+        </a>
+      {%- endif -%}
+
+      <button
+        type="button"
+        class="header__action header__action--index"
+        data-site-index-open
+        aria-label="{{ 'general.open_index' | t }}"
+      >
+        <span class="header__index-label">{{ section.settings.index_label | default: 'Index' }}</span>
+        {%- render 'icon-menu' -%}
+      </button>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "Show account", "default": true },
+    { "type": "checkbox", "id": "show_cart", "label": "Show cart", "default": true },
+    { "type": "text", "id": "index_label", "label": "Index label", "default": "Index" }
+  ]
+}
+{% endschema %}

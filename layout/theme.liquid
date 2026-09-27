@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_bg | default: '#FAF9F7' }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{ page_title }}
+      {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- render 'meta-tags' -%}
+    {%- render 'css-variables' -%}
+
+    {{ 'tokens.css' | asset_url | stylesheet_tag }}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'breath.css' | asset_url | stylesheet_tag }}
+
+    {%- if settings.font_heading -%}
+      {{ settings.font_heading | font_face: font_display: 'swap' }}
+      {{ settings.font_heading | font_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+    {%- endif -%}
+    {%- if settings.font_body -%}
+      {{ settings.font_body | font_face: font_display: 'swap' }}
+    {%- endif -%}
+
+    {{ content_for_header }}
+  </head>
+
+  <body>
+    <a href="#main" class="skip-link">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="main" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    <script src="{{ 'breath.js' | asset_url }}" type="module"></script>
+  </body>
+</html>

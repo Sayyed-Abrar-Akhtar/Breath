@@ -1,0 +1,47 @@
+/* ── Icons ────────────────────────────────────────────── */
+
+/*
+ * Icons are inline SVGs rendered by snippets (snippets/icon-*.liquid).
+ * They inherit color via `stroke="currentColor"`.
+ * This file ensures consistent sizing and alignment.
+ */
+
+svg {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Default icon size */
+[class*="icon-"] svg,
+button svg,
+summary svg,
+a svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Specific sizing contexts */
+.header__action svg {
+  width: 20px;
+  height: 20px;
+}
+
+.disclosure__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.signpost__arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+.site-index__close svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Icon color inherits from parent text color by default */
+svg [stroke="currentColor"] {
+  vector-effect: non-scaling-stroke;
+}

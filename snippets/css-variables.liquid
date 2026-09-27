@@ -1,0 +1,67 @@
+{%- comment -%}
+  Compiles merchant settings into CSS custom properties.
+  Rendered in <head> before any stylesheet to prevent FOUC.
+
+  @param {nil} - No parameters. Reads from global settings object.
+{%- endcomment -%}
+
+{% style %}
+  :root {
+    --color-bg: {{ settings.color_bg | default: '#FAF9F7' }};
+    --color-bg-subtle: {{ settings.color_bg_subtle | default: '#F2F0EC' }};
+    --color-text: {{ settings.color_text | default: '#1A1A18' }};
+    --color-text-muted: {{ settings.color_text_muted | default: '#6B6B66' }};
+    --color-border: {{ settings.color_border | default: '#E0DDD6' }};
+    --color-accent: {{ settings.color_accent | default: '#8B6F47' }};
+    --color-accent-text: {{ settings.color_accent_text | default: '#FFFFFF' }};
+    --color-button-bg: {{ settings.color_button_bg | default: '#1A1A18' }};
+    --color-button-text: {{ settings.color_button_text | default: '#FFFFFF' }};
+    --color-button-hover: {{ settings.color_button_hover | default: '#333330' }};
+    --color-error: {{ settings.color_error | default: '#C44141' }};
+    --color-success: {{ settings.color_success | default: '#3E7B4A' }};
+
+    --font-heading-family: {{ settings.font_heading.family | default: 'Georgia' }}, {{ settings.font_heading.fallback_families | default: 'serif' }};
+    --font-body-family: {{ settings.font_body.family | default: 'system-ui' }}, {{ settings.font_body.fallback_families | default: 'sans-serif' }};
+    --font-heading-weight: {{ settings.font_heading_weight | default: 400 }};
+    --font-body-weight: {{ settings.font_body_weight | default: 400 }};
+    --font-size-base: {{ settings.font_size_base | default: 16 }}px;
+    --font-size-sm: calc(var(--font-size-base) * 0.875);
+    --font-size-lg: calc(var(--font-size-base) * 1.125);
+    --font-size-xl: calc(var(--font-size-base) * 1.5);
+    --font-size-2xl: calc(var(--font-size-base) * 2);
+    --font-size-3xl: calc(var(--font-size-base) * 3);
+    --line-height-tight: {{ settings.line_height_tight | default: 1.2 }};
+    --line-height-normal: {{ settings.line_height_normal | default: 1.6 }};
+    --line-height-loose: {{ settings.line_height_loose | default: 1.8 }};
+
+    --space-unit: {{ settings.space_unit | default: 8 }}px;
+    --space-1: var(--space-unit);
+    --space-2: calc(var(--space-unit) * 2);
+    --space-3: calc(var(--space-unit) * 3);
+    --space-4: calc(var(--space-unit) * 4);
+    --space-6: calc(var(--space-unit) * 6);
+    --space-8: calc(var(--space-unit) * 8);
+    --space-12: calc(var(--space-unit) * 12);
+    --space-16: calc(var(--space-unit) * 16);
+
+    --layout-max-width: {{ settings.layout_max_width | default: 1200 }}px;
+    --layout-narrow-width: {{ settings.layout_narrow_width | default: 720 }}px;
+    --layout-gutter: {{ settings.layout_gutter | default: 24 }}px;
+
+    --border-radius: {{ settings.border_radius | default: 0 }}px;
+    --border-radius-sm: calc(var(--border-radius) * 0.5);
+    --border-radius-lg: calc(var(--border-radius) * 2);
+    --border-width: {{ settings.border_width | default: 1 }}px;
+
+    --motion-duration: {{ settings.motion_duration | default: 300 }}ms;
+    --motion-easing: {{ settings.motion_easing | default: 'ease-out' }};
+    --motion-distance: {{ settings.motion_distance | default: 24 }}px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --motion-duration: 0ms;
+      --motion-distance: 0px;
+    }
+  }
+{% endstyle %}

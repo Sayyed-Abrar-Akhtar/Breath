@@ -1,0 +1,70 @@
+/* Breath — Fallback tokens. Overridden by css-variables.liquid at runtime. */
+:root {
+  /* Color */
+  --color-bg: #FAF9F7;
+  --color-bg-subtle: #F2F0EC;
+  --color-text: #1A1A18;
+  --color-text-muted: #6B6B66;
+  --color-border: #E0DDD6;
+  --color-accent: #8B6F47;
+  --color-accent-text: #FFFFFF;
+  --color-button-bg: #1A1A18;
+  --color-button-text: #FFFFFF;
+  --color-button-hover: #333330;
+  --color-error: #C44141;
+  --color-success: #3E7B4A;
+
+  /* Typography */
+  --font-heading-family: Georgia, serif;
+  --font-body-family: system-ui, -apple-system, sans-serif;
+  --font-heading-weight: 400;
+  --font-body-weight: 400;
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 48px;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.6;
+  --line-height-loose: 1.8;
+
+  /* Spacing */
+  --space-unit: 8px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-12: 96px;
+  --space-16: 128px;
+
+  /* Layout */
+  --layout-max-width: 1200px;
+  --layout-narrow-width: 720px;
+  --layout-gutter: 24px;
+
+  /* Borders */
+  --border-radius: 0px;
+  --border-radius-sm: 0px;
+  --border-radius-lg: 0px;
+  --border-width: 1px;
+
+  /* Motion */
+  --motion-duration: 300ms;
+  --motion-easing: ease-out;
+  --motion-distance: 24px;
+
+  /* Z-index scale */
+  --z-header: 10;
+  --z-overlay: 100;
+  --z-modal: 200;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration: 0ms;
+    --motion-distance: 0px;
+  }
+}

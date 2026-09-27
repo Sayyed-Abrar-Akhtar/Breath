@@ -1,0 +1,274 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Breath",
+    "theme_version": "0.1.0",
+    "theme_author": "Breath",
+    "theme_documentation_url": "https://example.com/breath/docs",
+    "theme_support_url": "https://example.com/breath/support"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "header", "content": "Page" },
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background",
+        "default": "#FAF9F7"
+      },
+      {
+        "type": "color",
+        "id": "color_bg_subtle",
+        "label": "Subtle background",
+        "default": "#F2F0EC"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text",
+        "default": "#1A1A18"
+      },
+      {
+        "type": "color",
+        "id": "color_text_muted",
+        "label": "Muted text",
+        "default": "#6B6B66"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Borders",
+        "default": "#E0DDD6"
+      },
+      { "type": "header", "content": "Accent" },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "default": "#8B6F47"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_text",
+        "label": "Accent text",
+        "default": "#FFFFFF"
+      },
+      { "type": "header", "content": "Buttons" },
+      {
+        "type": "color",
+        "id": "color_button_bg",
+        "label": "Button background",
+        "default": "#1A1A18"
+      },
+      {
+        "type": "color",
+        "id": "color_button_text",
+        "label": "Button text",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_button_hover",
+        "label": "Button hover",
+        "default": "#333330"
+      },
+      { "type": "header", "content": "Feedback" },
+      {
+        "type": "color",
+        "id": "color_error",
+        "label": "Error",
+        "default": "#C44141"
+      },
+      {
+        "type": "color",
+        "id": "color_success",
+        "label": "Success",
+        "default": "#3E7B4A"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Heading font",
+        "default": "georgia_n4"
+      },
+      {
+        "type": "select",
+        "id": "font_heading_weight",
+        "label": "Heading weight",
+        "options": [
+          { "value": "300", "label": "Light" },
+          { "value": "400", "label": "Regular" },
+          { "value": "500", "label": "Medium" },
+          { "value": "600", "label": "Semibold" },
+          { "value": "700", "label": "Bold" }
+        ],
+        "default": "400"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body font",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "select",
+        "id": "font_body_weight",
+        "label": "Body weight",
+        "options": [
+          { "value": "300", "label": "Light" },
+          { "value": "400", "label": "Regular" },
+          { "value": "500", "label": "Medium" },
+          { "value": "600", "label": "Semibold" }
+        ],
+        "default": "400"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "label": "Base font size",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "line_height_tight",
+        "label": "Line height (tight)",
+        "min": 1.0,
+        "max": 1.4,
+        "step": 0.1,
+        "default": 1.2
+      },
+      {
+        "type": "range",
+        "id": "line_height_normal",
+        "label": "Line height (normal)",
+        "min": 1.4,
+        "max": 2.0,
+        "step": 0.1,
+        "default": 1.6
+      },
+      {
+        "type": "range",
+        "id": "line_height_loose",
+        "label": "Line height (loose)",
+        "min": 1.6,
+        "max": 2.2,
+        "step": 0.1,
+        "default": 1.8
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "space_unit",
+        "label": "Base spacing unit",
+        "min": 4,
+        "max": 16,
+        "step": 2,
+        "unit": "px",
+        "default": 8,
+        "info": "All spacing is a multiple of this value."
+      },
+      {
+        "type": "range",
+        "id": "layout_max_width",
+        "label": "Max content width",
+        "min": 960,
+        "max": 1600,
+        "step": 40,
+        "unit": "px",
+        "default": 1200
+      },
+      {
+        "type": "range",
+        "id": "layout_narrow_width",
+        "label": "Narrow content width",
+        "min": 600,
+        "max": 900,
+        "step": 20,
+        "unit": "px",
+        "default": 720
+      },
+      {
+        "type": "range",
+        "id": "layout_gutter",
+        "label": "Page gutter",
+        "min": 16,
+        "max": 64,
+        "step": 4,
+        "unit": "px",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "label": "Border radius",
+        "min": 0,
+        "max": 24,
+        "step": 2,
+        "unit": "px",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "border_width",
+        "label": "Border width",
+        "min": 0,
+        "max": 4,
+        "step": 1,
+        "unit": "px",
+        "default": 1
+      }
+    ]
+  },
+  {
+    "name": "Motion",
+    "settings": [
+      {
+        "type": "range",
+        "id": "motion_duration",
+        "label": "Animation duration",
+        "min": 100,
+        "max": 800,
+        "step": 50,
+        "unit": "ms",
+        "default": 300
+      },
+      {
+        "type": "select",
+        "id": "motion_easing",
+        "label": "Animation easing",
+        "options": [
+          { "value": "ease", "label": "Ease" },
+          { "value": "ease-in", "label": "Ease in" },
+          { "value": "ease-out", "label": "Ease out" },
+          { "value": "ease-in-out", "label": "Ease in out" },
+          { "value": "linear", "label": "Linear" }
+        ],
+        "default": "ease-out"
+      },
+      {
+        "type": "range",
+        "id": "motion_distance",
+        "label": "Reveal distance",
+        "min": 8,
+        "max": 64,
+        "step": 4,
+        "unit": "px",
+        "default": 24
+      }
+    ]
+  }
+]

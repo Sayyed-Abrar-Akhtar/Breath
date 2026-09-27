@@ -1,0 +1,79 @@
+{%- comment -%}
+  Universal progressive disclosure primitive.
+  Every collapsible element in the theme uses this.
+
+  Renders a native <details>/<summary> element with proper ARIA,
+  keyboard support, and event dispatch. No JavaScript is required
+  for the disclosure itself to function — JS only enhances group
+  behavior (accordion) and dispatches events.
+
+  @param {string} id - Unique identifier (used for aria-controls and DOM querying)
+  @param {string} title - Always-visible summary label
+  @param {string} content - Content to reveal (pass via capture)
+  @param {boolean} [default_open] - Whether initially open (default: false)
+  @param {string} [class] - Additional CSS classes on the <details> element
+  @param {string} [icon] - Icon name for the summary (default: 'chevron')
+  @param {boolean} [disabled] - Render as static content without disclosure
+  @param {string} [data_attr] - Optional data attribute string for JS hooks
+
+  @example
+    {%- capture details_content -%}
+      <p>Full product details go here.</p>
+    {%- endcapture -%}
+    {% render 'disclosure',
+      id: 'product-details',
+      title: 'Details',
+      content: details_content,
+      default_open: false
+    %}
+
+  @example
+    {%- capture shipping_content -%}
+      <p>Ships within 2 business days.</p>
+    {%- endcapture -%}
+    {% render 'disclosure',
+      id: 'shipping-info',
+      title: 'Shipping',
+      content: shipping_content,
+      icon: 'truck'
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign disclosure_icon = icon | default: 'chevron'
+  assign disclosure_class = 'disclosure'
+  if class != blank
+    assign disclosure_class = disclosure_class | append: ' ' | append: class
+  endif
+-%}
+
+{%- if disabled -%}
+  <div class="{{ disclosure_class }} {{ disclosure_class }}--static">
+    <div class="{{ disclosure_class }}__summary {{ disclosure_class }}__summary--static">
+      <span class="{{ disclosure_class }}__title">{{ title }}</span>
+    </div>
+    <div class="{{ disclosure_class }}__content" id="{{ id }}">
+      {{ content }}
+    </div>
+  </div>
+{%- else -%}
+  <details
+    class="{{ disclosure_class }}"
+    id="{{ id }}-details"
+    {% if default_open %}open{% endif %}
+    {% if data_attr %}{{ data_attr }}{% endif %}
+  >
+    <summary
+      class="{{ disclosure_class }}__summary"
+      aria-controls="{{ id }}"
+    >
+      <span class="{{ disclosure_class }}__title">{{ title }}</span>
+      <span class="{{ disclosure_class }}__icon" aria-hidden="true">
+        {%- render 'icon-' | append: disclosure_icon -%}
+      </span>
+    </summary>
+    <div class="{{ disclosure_class }}__content" id="{{ id }}" role="region">
+      {{ content }}
+    </div>
+  </details>
+{%- endif -%}

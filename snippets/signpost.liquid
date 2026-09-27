@@ -1,0 +1,48 @@
+{%- comment -%}
+  Contextual navigation element placed at decision points.
+  The primary wayfinding primitive of the theme.
+
+  @param {string} label - Action text (e.g., "Shop the collection")
+  @param {string} url - Destination URL
+  @param {string} [context] - Micro-copy explaining why to click
+  @param {string} [icon] - Icon name (without "icon-" prefix)
+  @param {string} [style] - 'primary' | 'secondary' | 'text' (default: 'secondary')
+  @param {boolean} [external] - Whether link is external
+
+  @example
+    {% render 'signpost',
+      label: 'Browse living',
+      url: routes.all_products_collection_url,
+      context: '156 pieces',
+      style: 'primary'
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign style = style | default: 'secondary'
+  assign external_attr = ''
+  if external
+    assign external_attr = 'target="_blank" rel="noopener"'
+  endif
+-%}
+
+<a
+  href="{{ url }}"
+  class="signpost signpost--{{ style }}"
+  {{ external_attr }}
+>
+  {%- if icon -%}
+    <span class="signpost__icon" aria-hidden="true">
+      {%- render 'icon-' | append: icon -%}
+    </span>
+  {%- endif -%}
+
+  <span class="signpost__body">
+    <span class="signpost__label">{{ label }}</span>
+    {%- if context -%}
+      <span class="signpost__context">{{ context }}</span>
+    {%- endif -%}
+  </span>
+
+  <span class="signpost__arrow" aria-hidden="true">&#8594;</span>
+</a>

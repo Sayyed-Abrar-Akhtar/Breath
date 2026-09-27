@@ -1,0 +1,68 @@
+/* ── Scroll Reveal ────────────────────────────────────── */
+
+/*
+ * Progressive enhancement:
+ *   - Without JS: content is fully visible (opacity: 1)
+ *   - With JS: html.js-reveal is added, elements start hidden
+ *   - prefers-reduced-motion: no hiding, no animation
+ */
+
+/* Base (no-JS): everything visible */
+.reveal {
+  opacity: 1;
+}
+
+/* JS is active: hide until revealed */
+html.js-reveal .reveal:not(.is-revealed) {
+  opacity: 0;
+}
+
+html.js-reveal .reveal--single:not(.is-revealed) {
+  transform: translateY(var(--motion-distance));
+}
+
+html.js-reveal .reveal:not(.is-revealed) {
+  transition:
+    opacity var(--motion-duration) var(--motion-easing),
+    transform var(--motion-duration) var(--motion-easing);
+  will-change: opacity, transform;
+}
+
+html.js-reveal .reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Stagger variant: children animate individually */
+html.js-reveal .reveal--stagger:not(.is-revealed) > * {
+  opacity: 0;
+  transform: translateY(var(--motion-distance));
+}
+
+html.js-reveal .reveal--stagger > * {
+  transition:
+    opacity var(--motion-duration) var(--motion-easing),
+    transform var(--motion-duration) var(--motion-easing);
+}
+
+html.js-reveal .reveal--stagger.is-revealed > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Revealed parent: hide itself so only children animate */
+html.js-reveal .reveal--stagger:not(.is-revealed) {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reduced motion: kill everything */
+@media (prefers-reduced-motion: reduce) {
+  html.js-reveal .reveal,
+  html.js-reveal .reveal > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

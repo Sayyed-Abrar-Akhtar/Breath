@@ -1,0 +1,21 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "show_localization": true,
+        "show_payment_icons": true
+      }
+    },
+    "site-index": {
+      "type": "site-index",
+      "settings": {
+        "heading": "The Index",
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": ["footer", "site-index"]
+}

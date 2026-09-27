@@ -1,0 +1,54 @@
+{%- comment -%}
+  Country and language selectors.
+  Required by Shopify Theme Store requirements.
+{%- endcomment -%}
+
+{%- if localization.available_countries.size > 1 or localization.available_languages.size > 1 -%}
+  {%- form 'localization', id: 'localization-form', class: 'localization-form' -%}
+    {%- if localization.available_countries.size > 1 -%}
+      <div class="localization-form__field">
+        <label for="country-code" class="localization-form__label">
+          {{ 'footer.localization' | t }}
+        </label>
+        <select
+          name="country_code"
+          id="country-code"
+          class="localization-form__select"
+          onchange="this.form.submit()"
+        >
+          {%- for country in localization.available_countries -%}
+            <option
+              value="{{ country.iso_code }}"
+              {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+            >
+              {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+
+    {%- if localization.available_languages.size > 1 -%}
+      <div class="localization-form__field">
+        <label for="language-code" class="localization-form__label">
+          {{ 'footer.language' | t }}
+        </label>
+        <select
+          name="language_code"
+          id="language-code"
+          class="localization-form__select"
+          onchange="this.form.submit()"
+        >
+          {%- for language in localization.available_languages -%}
+            <option
+              value="{{ language.iso_code }}"
+              {% if language.iso_code == localization.language.iso_code %}selected{% endif %}
+            >
+              {{ language.endonym_name | capitalize }}
+            </option>
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+{%- endif -%}

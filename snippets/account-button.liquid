@@ -1,0 +1,8 @@
+{%- comment -%}
+  Mandatory Shopify Account component.
+  Must render the login_button filter without modification.
+{%- endcomment -%}
+
+{%- if shop.customer_accounts_enabled -%}
+  {{ 'customer' | login_button }}
+{%- endif -%}

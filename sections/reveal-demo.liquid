@@ -1,0 +1,46 @@
+{%- comment -%}
+  DEV ONLY — remove before Theme Store submission.
+  Test harness for the reveal primitive.
+{%- endcomment -%}
+
+<section class="section container" style="padding-block: var(--space-16);">
+  <h2>Reveal Demo — Single</h2>
+
+  {%- capture single_content -%}
+    <p>This paragraph is wrapped in a single reveal. It fades in as it enters the viewport.</p>
+  {%- endcapture -%}
+
+  {% render 'reveal', content: single_content, variant: 'single' %}
+
+  <h2 style="margin-top: var(--space-16);">Reveal Demo — Stagger</h2>
+
+  {%- capture stagger_content -%}
+    <p>Item one</p>
+    <p>Item two</p>
+    <p>Item three</p>
+    <p>Item four</p>
+    <p>Item five</p>
+  {%- endcapture -%}
+
+  {% render 'reveal', content: stagger_content, variant: 'stagger', delay: 100 %}
+
+  <h2 style="margin-top: var(--space-16);">Disclosure Demo</h2>
+
+  <disclosure-group data-accordion="true">
+    {%- capture d1 -%}<p>Details content one.</p>{%- endcapture -%}
+    {% render 'disclosure', id: 'demo-1', title: 'Details one', content: d1 %}
+
+    {%- capture d2 -%}<p>Details content two.</p>{%- endcapture -%}
+    {% render 'disclosure', id: 'demo-2', title: 'Details two', content: d2 %}
+
+    {%- capture d3 -%}<p>Details content three.</p>{%- endcapture -%}
+    {% render 'disclosure', id: 'demo-3', title: 'Details three', content: d3 %}
+  </disclosure-group>
+</section>
+
+{% schema %}
+{
+  "name": "Reveal Demo",
+  "presets": [{ "name": "Reveal Demo" }]
+}
+{% endschema %}

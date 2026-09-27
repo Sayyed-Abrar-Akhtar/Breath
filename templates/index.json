@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "hero": {
+      "type": "reveal-demo",
+      "settings": {
+        "heading": "Breath",
+        "subheading": "A slower way to browse."
+      }
+    }
+  },
+  "order": ["hero"]
+}
