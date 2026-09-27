@@ -1,0 +1,66 @@
+{%- comment -%}
+  Native select with custom styling.
+
+  @param {string} name - Select name
+  @param {string} [id] - Select id (defaults to name)
+  @param {string} [label] - Label text
+  @param {array} options - Array of {value, label, selected} objects
+  @param {string} [class] - Additional CSS classes
+  @param {boolean} [label_visible] - Show label visually (default: true)
+  @param {string} [hint] - Helper text
+  @param {string} [data_attr] - Optional data attribute string for JS hooks
+
+  @example
+    {%- assign opts = '' | split: '' -%}
+    {% render 'select',
+      name: 'sort_by',
+      label: 'Sort by',
+      options: collection.sort_options
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign select_id = id | default: name | handleize
+  assign select_class = 'select'
+  if class != blank
+    assign select_class = select_class | append: ' ' | append: class
+  endif
+  assign show_label = label_visible | default: true, allow_false: true
+  if label == blank
+    assign show_label = false
+  endif
+-%}
+
+<div class="select-group">
+  {%- if show_label -%}
+    <label for="{{ select_id }}" class="select-group__label">{{ label }}</label>
+  {%- elsif label != blank -%}
+    <label for="{{ select_id }}" class="visually-hidden">{{ label }}</label>
+  {%- endif -%}
+
+  <div class="select-group__wrapper">
+    <select
+      id="{{ select_id }}"
+      name="{{ name }}"
+      class="{{ select_class }}"
+      {% if data_attr %}{{ data_attr }}{% endif %}
+    >
+      {%- for option in options -%}
+        <option
+          value="{{ option.value }}"
+          {% if option.selected %}selected{% endif %}
+        >
+          {{ option.label }}
+        </option>
+      {%- endfor -%}
+    </select>
+
+    <span class="select-group__icon" aria-hidden="true">
+      {%- render 'icon-chevron' -%}
+    </span>
+  </div>
+
+  {%- if hint -%}
+    <p class="select-group__hint">{{ hint }}</p>
+  {%- endif -%}
+</div>

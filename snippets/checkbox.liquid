@@ -1,0 +1,47 @@
+{%- comment -%}
+  Checkbox or radio primitive.
+
+  @param {string} name - Input name
+  @param {string} value - Input value
+  @param {string} [id] - Input id (defaults to name + value)
+  @param {string} [label] - Label text (rendered next to the input)
+  @param {string} [type] - 'checkbox' | 'radio' (default: 'checkbox')
+  @param {boolean} [checked] - Whether checked
+  @param {number} [count] - Optional count badge (e.g., for facet filters)
+  @param {string} [class] - Additional CSS classes
+
+  @example
+    {% render 'checkbox',
+      name: 'filter.v.option.color',
+      value: 'Red',
+      label: 'Red',
+      count: 12
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign input_type = type | default: 'checkbox'
+  assign input_id = id | default: name | append: '-' | append: value | handleize
+  assign input_class = 'checkbox'
+  if class != blank
+    assign input_class = input_class | append: ' ' | append: class
+  endif
+-%}
+
+<label class="checkbox-group" for="{{ input_id }}">
+  <input
+    type="{{ input_type }}"
+    id="{{ input_id }}"
+    name="{{ name }}"
+    value="{{ value | escape }}"
+    class="{{ input_class }}"
+    {% if checked %}checked{% endif %}
+  >
+  <span class="checkbox__control" aria-hidden="true">
+    <span class="checkbox__mark"></span>
+  </span>
+  <span class="checkbox__label">{{ label }}</span>
+  {%- if count != blank -%}
+    <span class="checkbox__count">{{ count }}</span>
+  {%- endif -%}
+</label>

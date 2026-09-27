@@ -1,0 +1,89 @@
+{%- comment -%}
+  Faceted search filter system.
+
+  Renders a <form> wrapping all filter groups.
+  Uses progressive enhancement:
+    - Without JS: full-page form submission to collection URL
+    - With JS: AJAX grid update via Section Rendering API
+
+  @param {object} source - collection or search object with .filters
+  @param {string} [class] - Additional CSS classes
+  @param {boolean} [show_active] - Show active filter pills (default: true)
+  @param {boolean} [show_clear] - Show "Clear all" button (default: true)
+  @param {string} [grid_target] - Selector for grid to update (default: '[data-product-grid]')
+
+  @example
+    {% render 'facet-filters', source: collection %}
+{%- endcomment -%}
+
+{%- liquid
+  assign filters = source.filters
+  assign facet_class = 'facets'
+  if class != blank
+    assign facet_class = facet_class | append: ' ' | append: class
+  endif
+
+  assign facet_show_active = show_active | default: true, allow_false: true
+  assign facet_show_clear = show_clear | default: true, allow_false: true
+  assign facet_grid_target = grid_target | default: '[data-product-grid]'
+
+  # Count active filters
+  assign active_count = 0
+  for filter in filters
+    assign active_count = active_count | plus: filter.active_values.size
+    if filter.type == 'price_range'
+      if filter.min_value.value != nil or filter.max_value.value != nil
+        assign active_count = active_count | plus: 1
+      endif
+    endif
+  endfor
+-%}
+
+{%- if filters.size > 0 -%}
+  <form
+    class="{{ facet_class }}"
+    data-facets
+    data-grid-target="{{ facet_grid_target }}"
+    action="{{ source.url }}"
+    method="get"
+  >
+    <div class="facets__header">
+      <h2 class="facets__title">
+        {{ 'facets.title' | t | default: 'Filter by' }}
+        {%- if active_count > 0 -%}
+          <span class="facets__active-count" aria-hidden="true">{{ active_count }}</span>
+        {%- endif -%}
+      </h2>
+
+      {%- if facet_show_clear and active_count > 0 -%}
+        <a href="{{ source.url }}" class="facets__clear" data-facets-clear>
+          {{ 'facets.clear_all' | t | default: 'Clear all' }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if facet_show_active and active_count > 0 -%}
+      {% render 'active-filters', source: source %}
+    {%- endif -%}
+
+    <disclosure-group data-accordion="false" class="facets__groups">
+      {%- for filter in filters -%}
+        {% render 'facet-filter-group', filter: filter %}
+      {%- endfor -%}
+    </disclosure-group>
+
+    {%- comment -%}
+      No-JS fallback: submit button.
+      Hidden when JS runs; JS intercepts and updates grid via AJAX.
+    {%- endcomment -%}
+    <noscript>
+      <button type="submit" class="button button--primary facets__submit">
+        {{ 'facets.apply' | t | default: 'Apply filters' }}
+      </button>
+    </noscript>
+
+    <div class="facets__loading" data-facets-loading hidden aria-live="polite">
+      <span class="visually-hidden">{{ 'accessibility.loading' | t }}</span>
+    </div>
+  </form>
+{%- endif -%}

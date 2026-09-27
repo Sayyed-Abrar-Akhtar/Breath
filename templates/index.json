@@ -10,7 +10,11 @@
     "product-demo": {
       "type": "product-grid-demo",
       "settings": {}
+    },
+    "facets-demo": {
+      "type": "facets-demo",
+      "settings": {}
     }
   },
-  "order": ["hero", "product-demo"]
+  "order": ["hero", "product-demo", "facets-demo"]
 }

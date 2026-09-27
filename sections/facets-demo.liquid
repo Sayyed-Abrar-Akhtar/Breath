@@ -1,0 +1,90 @@
+{%- comment -%}
+  DEV ONLY — remove before Theme Store submission.
+  Test harness for form primitives and faceted filtering.
+{%- endcomment -%}
+
+<section class="section container" style="padding-block: var(--space-12);">
+  <h2>Form Primitives Demo</h2>
+
+  <div style="display: flex; flex-direction: column; gap: var(--space-4); max-width: 480px; margin-top: var(--space-4);">
+    {% render 'input', name: 'demo-text', label: 'Text input', placeholder: 'Type something' %}
+    {% render 'input', name: 'demo-email', type: 'email', label: 'Email', required: true, autocomplete: 'email' %}
+    {% render 'input', name: 'demo-password', type: 'password', label: 'Password', hint: 'At least 8 characters' %}
+    {% render 'input', name: 'demo-error', label: 'With error', error: 'This field is required' %}
+
+    {%- assign demo_options = '' | split: '' -%}
+    {%- assign opt1 = '{"value":"a","label":"Option A","selected":true}' | parse_json -%}
+    {%- assign opt2 = '{"value":"b","label":"Option B"}' | parse_json -%}
+    {%- assign opt3 = '{"value":"c","label":"Option C"}' | parse_json -%}
+    {%- assign demo_options = demo_options | concat: opt1 | concat: opt2 | concat: opt3 -%}
+
+    {% render 'select', name: 'demo-select', label: 'Select', options: demo_options %}
+
+    {% render 'checkbox', name: 'demo-check', value: 'yes', label: 'I agree', checked: false %}
+    {% render 'checkbox', name: 'demo-radio', value: 'a', type: 'radio', label: 'Option A' %}
+    {% render 'checkbox', name: 'demo-radio', value: 'b', type: 'radio', label: 'Option B', checked: true %}
+
+    {% render 'quantity-input', name: 'demo-qty', value: 1, min: 1, max: 10 %}
+  </div>
+
+  <h2 style="margin-top: var(--space-12);">Newsletter Demo</h2>
+  <div style="margin-top: var(--space-4);">
+    {% render 'newsletter-form', heading: 'Stay in touch', subheading: 'One letter per month. No noise.' %}
+  </div>
+
+  <h2 style="margin-top: var(--space-12);">Facets Demo</h2>
+
+  {%- assign demo_collection = collections[section.settings.collection] -%}
+
+  {%- if demo_collection != blank -%}
+    <div style="display: grid; grid-template-columns: 240px 1fr; gap: var(--space-8); margin-top: var(--space-4);">
+      <aside>
+        {% render 'facet-filters', source: demo_collection, grid_target: '[data-product-grid]' %}
+      </aside>
+
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+          <p data-facets-count>
+            {{ demo_collection.products_count }}
+            {{ 'facets.count' | t | default: 'products' }}
+          </p>
+          {% render 'sort-dropdown', source: demo_collection %}
+        </div>
+
+        {%- paginate demo_collection.products by 12 -%}
+          {%- capture grid_content -%}
+            {%- for product in demo_collection.products -%}
+              {% render 'product-card',
+                product: product,
+                index: forloop.index0,
+                sizes: '(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw'
+              %}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          <div data-product-grid>
+            {% render 'reveal', content: grid_content, variant: 'stagger', class: 'product-grid' %}
+
+            {%- if paginate.pages > 1 -%}
+              <nav class="pagination" style="margin-top: var(--space-8);">
+                {{ paginate | default_pagination }}
+              </nav>
+            {%- endif -%}
+          </div>
+        {%- endpaginate -%}
+      </div>
+    </div>
+  {%- else -%}
+    <p>Select a collection in the theme editor to preview facets.</p>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Facets Demo",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Demo collection" }
+  ],
+  "presets": [{ "name": "Facets Demo" }]
+}
+{% endschema %}

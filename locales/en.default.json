@@ -37,6 +37,17 @@
       "view_product": "View product"
     }
   },
+  "facets": {
+    "title": "Filter by",
+    "clear_all": "Clear all",
+    "apply": "Apply filters",
+    "active_filters": "Active filters",
+    "remove_filter": "Remove filter",
+    "sort_by": "Sort by",
+    "from": "From",
+    "to": "To",
+    "no_results": "No products match your filters"
+  },
   "search": {
     "placeholder": "Search",
     "submit": "Search",
@@ -53,7 +64,16 @@
     "checkout": "Checkout",
     "subtotal": "Subtotal",
     "quantity": "Quantity",
+    "quantity_decrease": "Decrease quantity",
+    "quantity_increase": "Increase quantity",
     "remove": "Remove"
+  },
+  "newsletter": {
+    "heading": "Stay in touch",
+    "email_label": "Email",
+    "email_placeholder": "Email address",
+    "submit": "Subscribe",
+    "success": "Thanks for subscribing."
   },
   "footer": {
     "localization": "Country/region",

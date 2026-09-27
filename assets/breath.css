@@ -1,7 +1,12 @@
 /* Breath — Main stylesheet. Imports in cascade order. */
 /* tokens.css and base.css are loaded separately in theme.liquid for FOUC prevention. */
 /* Utilities */
+
+/* Utilities */
 @import url("icons.css");
+
+/* Form primitives */
+@import url("forms.css");
 
 /* Media pipeline */
 @import url("media.css");
@@ -14,6 +19,7 @@
 @import url("header.css");
 @import url("footer.css");
 @import url("reveal.css");
+@import url("facets.css");
 
 /* ── Disclosure Primitive ─────────────────────────────── */
 
