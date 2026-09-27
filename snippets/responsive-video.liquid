@@ -1,0 +1,88 @@
+{%- comment -%}
+  Unified media renderer for:
+    - Native video (Shopify-hosted mp4)
+    - External video (YouTube, Vimeo)
+    - 3D models (Shopify-hosted glb/usdz)
+
+  Handles poster images, lazy loading, and accessible controls.
+
+  @param {object} media - A media object (product.media item or section setting)
+  @param {string} [class] - Additional CSS classes
+  @param {string} [sizes] - Sizes for poster image
+  @param {string} [aspect_ratio] - CSS aspect-ratio override
+  @param {boolean} [autoplay] - Autoplay (default: false) — muted if true
+  @param {boolean} [loop] - Loop (default: false)
+  @param {boolean} [controls] - Show controls (default: true)
+
+  @example
+    {% render 'responsive-video', media: product.media[0], aspect_ratio: '4 / 5' %}
+{%- endcomment -%}
+
+{%- liquid
+  if media == blank
+    echo ''
+    break
+  endif
+
+  assign media_class = class | default: ''
+  assign media_aspect = aspect_ratio | default: '16 / 9'
+  assign media_autoplay = autoplay | default: false
+  assign media_loop = loop | default: false
+  assign media_controls = controls | default: true
+
+  if media_aspect == blank and media.aspect_ratio
+    assign media_aspect = media.aspect_ratio
+  endif
+-%}
+
+<div
+  class="responsive-video {{ media_class }}"
+  style="aspect-ratio: {{ media_aspect }};"
+  data-media
+  data-media-type="{{ media.media_type }}"
+>
+  {%- case media.media_type -%}
+    {%- when 'video' -%}
+      {{
+        media
+        | video_tag:
+          image_size: '1200x',
+          autoplay: media_autoplay,
+          loop: media_loop,
+          controls: media_controls,
+          muted: media_autoplay,
+          playsinline: true,
+          class: 'responsive-video__native'
+      }}
+
+    {%- when 'external_video' -%}
+      {%- if media.host == 'youtube' -%}
+        {{ media | external_video_tag: class: 'responsive-video__external' }}
+      {%- elsif media.host == 'vimeo' -%}
+        {{ media | external_video_tag: class: 'responsive-video__external' }}
+      {%- else -%}
+        {{ media | external_video_tag: class: 'responsive-video__external' }}
+      {%- endif -%}
+
+    {%- when 'model' -%}
+      <div class="responsive-video__model">
+        {{ media | model_viewer_tag:
+          image_size: '1200x',
+          reveal: 'interaction',
+          toggleable: true,
+          class: 'responsive-video__model-viewer'
+        }}
+      </div>
+
+    {%- when 'image' -%}
+      {% render 'responsive-image',
+        image: media,
+        sizes: '100vw',
+        aspect_ratio: media_aspect,
+        class: 'responsive-video__image'
+      %}
+
+    {%- else -%}
+      {{ media | media_tag }}
+  {%- endcase -%}
+</div>

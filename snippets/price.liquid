@@ -1,0 +1,104 @@
+{%- comment -%}
+  Price display for products, variants, cart line items.
+
+  Handles:
+    - Regular price
+    - Compare-at (sale) price
+    - Price ranges when product.price_varies
+    - Unit price (required in EU/Switzerland)
+    - Selling plan allocations
+
+  @param {product} [product] - Product object (for collections/cards)
+  @param {variant} [variant] - Variant object (for product page)
+  @param {number} [price] - Override price (for line items)
+  @param {number} [compare_at_price] - Override compare-at
+  @param {object} [unit_price_measurement] - For unit pricing
+  @param {boolean} [show_compare_at] - Show compare-at (default: true)
+  @param {string} [class] - Additional CSS classes
+  @param {string} [size] - 'sm' | 'base' | 'lg' (default: 'base')
+
+  @example
+    {% render 'price', product: product %}
+
+  @example
+    {% render 'price',
+      variant: product.selected_or_first_available_variant,
+      show_compare_at: true
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign price_class = 'price'
+  if class != blank
+    assign price_class = price_class | append: ' ' | append: class
+  endif
+  if size != blank
+    assign price_class = price_class | append: ' price--' | append: size
+  endif
+
+  assign show_compare_at = show_compare_at | default: true, allow_false: true
+-%}
+
+<div class="{{ price_class }}" data-price>
+  {%- if product != blank -%}
+    {%- comment -%} Product-level pricing (collections, cards) {%- endcomment -%}
+    {%- if product.price_varies -%}
+      <span class="price__from">{{ 'products.price.from' | t | default: 'From' }}</span>
+      <span class="price__current">{{ product.price_min | money }}</span>
+    {%- else -%}
+      {%- if show_compare_at and product.compare_at_price > product.price -%}
+        <span class="price__compare-at">
+          <s>{{ product.compare_at_price | money }}</s>
+        </span>
+        <span class="price__current price__current--sale">
+          {{ product.price | money }}
+        </span>
+      {%- else -%}
+        <span class="price__current">{{ product.price | money }}</span>
+      {%- endif -%}
+    {%- endif -%}
+
+  {%- elsif variant != blank -%}
+    {%- comment -%} Variant-level pricing (product page) {%- endcomment -%}
+    {%- if show_compare_at and variant.compare_at_price > variant.price -%}
+      <span class="price__compare-at">
+        <s>{{ variant.compare_at_price | money }}</s>
+      </span>
+      <span class="price__current price__current--sale">
+        {{ variant.price | money }}
+      </span>
+    {%- else -%}
+      <span class="price__current">{{ variant.price | money }}</span>
+    {%- endif -%}
+
+    {%- if variant.unit_price_measurement -%}
+      <span class="price__unit">
+        {{ variant.unit_price | money }}
+        <span aria-hidden="true">/</span>
+        <span class="visually-hidden">{{ 'products.price.per' | t | default: 'per' }}</span>
+        {%- if variant.unit_price_measurement.reference_value != 1 -%}
+          {{ variant.unit_price_measurement.reference_value }}
+        {%- endif -%}
+        {{ variant.unit_price_measurement.reference_unit }}
+      </span>
+    {%- endif -%}
+
+    {%- if variant.selling_plan_allocations.size > 0 -%}
+      <span class="price__selling-plan">
+        {{ variant.selling_plan_allocations.first.price | money }}
+        <span class="price__selling-plan-label">
+          {{ variant.selling_plan_allocations.first.selling_plan.name }}
+        </span>
+      </span>
+    {%- endif -%}
+
+  {%- elsif price != blank -%}
+    {%- comment -%} Raw price override (cart line items) {%- endcomment -%}
+    {%- if show_compare_at and compare_at_price > price -%}
+      <span class="price__compare-at"><s>{{ compare_at_price | money }}</s></span>
+      <span class="price__current price__current--sale">{{ price | money }}</span>
+    {%- else -%}
+      <span class="price__current">{{ price | money }}</span>
+    {%- endif -%}
+  {%- endif -%}
+</div>

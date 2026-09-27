@@ -19,6 +19,24 @@
     "continue": "Continue",
     "explore": "Explore"
   },
+  "products": {
+    "price": {
+      "from": "From",
+      "per": "per",
+      "sale": "Sale",
+      "sold_out": "Sold out"
+    },
+    "badges": {
+      "sale": "Sale",
+      "sold_out": "Sold out",
+      "new": "New"
+    },
+    "card": {
+      "details": "Details",
+      "materials": "Materials",
+      "view_product": "View product"
+    }
+  },
   "search": {
     "placeholder": "Search",
     "submit": "Search",
