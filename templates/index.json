@@ -6,7 +6,11 @@
         "heading": "Breath",
         "subheading": "A slower way to browse."
       }
+    },
+    "product-demo": {
+      "type": "product-grid-demo",
+      "settings": {}
     }
   },
-  "order": ["hero"]
+  "order": ["hero", "product-demo"]
 }

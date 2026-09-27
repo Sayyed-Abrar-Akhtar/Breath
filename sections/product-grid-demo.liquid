@@ -1,0 +1,84 @@
+{%- comment -%}
+  DEV ONLY — remove before Theme Store submission.
+  Test harness for product-card, price, badge, responsive-image.
+{%- endcomment -%}
+
+<section class="section container" style="padding-block: var(--space-12);">
+  <h2 style="margin-bottom: var(--space-6);">Product Card Demo</h2>
+
+  {%- assign demo_collection = collections[section.settings.collection] -%}
+
+  {%- if demo_collection != blank and demo_collection.products.size > 0 -%}
+    {%- capture grid_content -%}
+      {%- for product in demo_collection.products limit: 8 -%}
+        {% render 'product-card',
+          product: product,
+          index: forloop.index0,
+          sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw'
+        %}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {% render 'reveal',
+      content: grid_content,
+      variant: 'stagger',
+      delay: 80,
+      class: 'product-grid'
+    %}
+  {%- else -%}
+    <p>Select a collection in the theme editor to preview product cards.</p>
+    <div class="product-grid">
+      {%- for i in (1..4) -%}
+        <article class="product-card">
+          <div class="product-card__media">
+            <div class="product-card__image product-card__image--placeholder">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          </div>
+          <div class="product-card__info">
+            <h3 class="product-card__title">Example product</h3>
+            <div class="price"><span class="price__current">$42.00</span></div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <h2 style="margin-block: var(--space-12) var(--space-6);">Price Demo</h2>
+  <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+    <div>
+      <strong>Regular:</strong>
+      {% render 'price', price: 4200, compare_at_price: 4200 %}
+    </div>
+    <div>
+      <strong>On sale:</strong>
+      {% render 'price', price: 3200, compare_at_price: 4200 %}
+    </div>
+    <div>
+      <strong>Unit price:</strong>
+      {% render 'price', price: 1200, compare_at_price: 0 %}
+    </div>
+  </div>
+
+  <h2 style="margin-block: var(--space-12) var(--space-6);">Badge Demo</h2>
+  <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+    {% render 'badge', type: 'sale' %}
+    {% render 'badge', type: 'sold-out' %}
+    {% render 'badge', type: 'new' %}
+    {% render 'badge', type: 'custom', label: 'Limited' %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Grid Demo",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Demo collection"
+    }
+  ],
+  "presets": [{ "name": "Product Grid Demo" }]
+}
+{% endschema %}

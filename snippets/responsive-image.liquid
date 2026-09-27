@@ -1,0 +1,101 @@
+{%- comment -%}
+  Performance-first responsive image.
+
+  Uses `image_url` + `image_tag` with responsive widths, sizes,
+  and fetchpriority. Every image in the theme MUST flow through
+  this snippet — no raw <img> tags elsewhere.
+
+  Handles:
+    - Responsive srcset (7 widths)
+    - Format negotiation (WebP/AVIF via Shopify CDN)
+    - Lazy loading by default; eager + fetchpriority for above-fold
+    - Focal point support (via image.presentation.focal_point)
+    - Aspect ratio boxes to prevent CLS
+    - Alt text fallback
+
+  @param {image} image - Shopify image object
+  @param {string} sizes - Sizes attribute (e.g., '(min-width: 768px) 50vw, 100vw')
+  @param {string} [loading] - 'lazy' | 'eager' (default: 'lazy')
+  @param {string} [fetchpriority] - 'high' | 'low' | 'auto' (default: 'auto')
+  @param {string} [class] - Additional CSS classes
+  @param {string} [alt] - Override alt text
+  @param {number} [width] - Intrinsic width (for aspect ratio box, default: 1200)
+  @param {number} [height] - Intrinsic height (for aspect ratio box)
+  @param {string} [aspect_ratio] - CSS aspect-ratio value (e.g., '4 / 5')
+  @param {string} [object_fit] - 'cover' | 'contain' (default: 'cover')
+  @param {number} [max_width] - Max width for the largest srcset entry (default: 1600)
+
+  @example
+    {% render 'responsive-image',
+      image: product.featured_image,
+      sizes: '(min-width: 1200px) 400px, (min-width: 768px) 33vw, 100vw',
+      loading: 'lazy',
+      class: 'product-card__image',
+      aspect_ratio: '4 / 5'
+    %}
+
+  @example
+    {% render 'responsive-image',
+      image: section.settings.hero_image,
+      sizes: '100vw',
+      loading: 'eager',
+      fetchpriority: 'high',
+      aspect_ratio: '16 / 9'
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  if image == blank
+    echo ''
+    break
+  endif
+
+  assign img_loading = loading | default: 'lazy'
+  assign img_fetchpriority = fetchpriority | default: 'auto'
+  assign img_class = class | default: ''
+  assign img_alt = alt | default: image.alt | default: ''
+  assign img_object_fit = object_fit | default: 'cover'
+  assign img_max_width = max_width | default: 1600
+
+  # Aspect ratio: prefer explicit param, else derive from image
+  if aspect_ratio == blank and image.aspect_ratio
+    assign aspect_ratio = image.aspect_ratio
+  endif
+
+  # Widths string for srcset
+  assign widths = '320, 480, 640, 800, 960, 1200, 1600'
+  if img_max_width < 1600
+    assign widths = '320, 480, 640, 800, 960, 1200'
+  endif
+
+  # Escape alt text
+  assign img_alt = img_alt | escape
+
+  # Focal point (Shopify exposes as image.presentation.focal_point)
+  assign focal_point = image.presentation.focal_point | default: 'center'
+-%}
+
+{%- capture image_classes -%}
+responsive-image__img {{ img_class }}
+{%- endcapture -%}
+
+<div
+  class="responsive-image"
+  {% if aspect_ratio %}
+    style="aspect-ratio: {{ aspect_ratio }}; --focal-point: {{ focal_point }};"
+  {% endif %}
+  data-media
+>
+  {{
+    image
+    | image_url: width: img_max_width
+    | image_tag:
+      loading: img_loading,
+      fetchpriority: img_fetchpriority,
+      sizes: sizes,
+      widths: widths,
+      class: image_classes,
+      alt: img_alt,
+      style: 'object-fit: ' | append: img_object_fit | append: ';'
+  }}
+</div>

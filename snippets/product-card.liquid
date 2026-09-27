@@ -1,0 +1,129 @@
+{%- comment -%}
+  Editorial product card.
+
+  Structurally different from standard grid cards:
+    - Generous whitespace
+    - Single focal image (no hover effects, no image swap)
+    - Progressive disclosure for details
+    - Signpost to product page
+    - Badges appear only for sale/sold-out (no noise)
+
+  Uses the theme's core primitives: responsive-image, price, badge, disclosure.
+
+  @param {product} product - The product object
+  @param {string} [layout] - 'feature' | 'standard' (default: 'standard')
+  @param {string} [sizes] - Image sizes attribute
+  @param {boolean} [show_vendor] - Show vendor name (default: false)
+  @param {boolean} [show_details] - Show disclosure (default: true)
+  @param {boolean} [lazy] - Lazy-load image (default: true)
+  @param {number} [index] - Position in grid (for fetchpriority logic)
+
+  @example
+    {% render 'product-card',
+      product: product,
+      layout: 'standard',
+      sizes: '(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign card_layout = layout | default: 'standard'
+  assign card_sizes = sizes | default: '(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw'
+  assign card_show_vendor = show_vendor | default: false
+  assign card_show_details = show_details | default: true, allow_false: true
+  assign card_lazy = lazy | default: true, allow_false: true
+  assign card_index = index | default: 0
+
+  # First 2 cards load eagerly for LCP
+  assign img_loading = 'lazy'
+  assign img_fetchpriority = 'auto'
+  if card_index < 2 and card_lazy
+    assign img_loading = 'eager'
+    assign img_fetchpriority = 'high'
+  elsif card_lazy == false
+    assign img_loading = 'eager'
+    assign img_fetchpriority = 'high'
+  endif
+
+  # Badge logic
+  assign is_sold_out = false
+  assign is_on_sale = false
+  if product.available == false
+    assign is_sold_out = true
+  elsif product.compare_at_price > product.price
+    assign is_on_sale = true
+  endif
+-%}
+
+<article class="product-card product-card--{{ card_layout }}" data-product-card>
+  <a
+    href="{{ product.url }}"
+    class="product-card__media-link"
+    aria-label="{{ product.title | escape }}"
+    tabindex="-1"
+  >
+    <div class="product-card__media">
+      {%- if product.featured_image -%}
+        {% render 'responsive-image',
+          image: product.featured_image,
+          sizes: card_sizes,
+          loading: img_loading,
+          fetchpriority: img_fetchpriority,
+          class: 'product-card__image',
+          aspect_ratio: '4 / 5'
+        %}
+      {%- else -%}
+        <div class="product-card__image product-card__image--placeholder">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {%- endif -%}
+
+      {%- if is_sold_out -%}
+        {% render 'badge', type: 'sold-out', class: 'product-card__badge' %}
+      {%- elsif is_on_sale -%}
+        {% render 'badge', type: 'sale', class: 'product-card__badge' %}
+      {%- endif -%}
+    </div>
+  </a>
+
+  <div class="product-card__info">
+    {%- if card_show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title | escape }}</a>
+    </h3>
+
+    {% render 'price', product: product, size: 'base' %}
+
+    {%- if card_show_details -%}
+      {%- capture details_content -%}
+        {%- if product.description != blank -%}
+          <p>{{ product.description | strip_html | truncate: 160 }}</p>
+        {%- endif -%}
+
+        {%- if product.metafields.custom.materials != blank -%}
+          <p class="product-card__meta">
+            <strong>{{ 'products.card.materials' | t | default: 'Materials' }}:</strong>
+            {{ product.metafields.custom.materials }}
+          </p>
+        {%- endif -%}
+
+        <p class="product-card__meta">
+          <a href="{{ product.url }}" class="product-card__view-link">
+            {{ 'products.card.view_product' | t | default: 'View product' }}
+            <span aria-hidden="true">&#8594;</span>
+          </a>
+        </p>
+      {%- endcapture -%}
+
+      {% render 'disclosure',
+        id: 'product-card-details-' | append: product.id,
+        title: 'products.card.details' | t | default: 'Details',
+        content: details_content,
+        class: 'product-card__disclosure'
+      %}
+    {%- endif -%}
+  </div>
+</article>
