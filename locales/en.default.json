@@ -8,7 +8,8 @@
     "account": "Account",
     "previous": "Previous",
     "next": "Next",
-    "loading": "Loading"
+    "loading": "Loading",
+    "announcement": "Announcement"
   },
   "general": {
     "home": "Home",
@@ -49,8 +50,10 @@
     "no_results": "No products match your filters"
   },
   "search": {
+    "title": "Search",
     "placeholder": "Search",
     "submit": "Search",
+    "suggestions": "Popular",
     "no_results": "No results for \"{{ terms }}\"",
     "results_with_count": {
       "one": "{{ count }} result",
@@ -63,6 +66,7 @@
     "continue_shopping": "Continue shopping",
     "checkout": "Checkout",
     "subtotal": "Subtotal",
+    "taxes_included": "Tax included. Shipping calculated at checkout.",
     "quantity": "Quantity",
     "quantity_decrease": "Decrease quantity",
     "quantity_increase": "Increase quantity",

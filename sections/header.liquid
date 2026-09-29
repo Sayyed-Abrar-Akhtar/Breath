@@ -1,26 +1,52 @@
-<header class="header{% if section.settings.sticky %} header--sticky{% endif %}" role="banner">
+{%- comment -%}
+  Header toolbar.
+  Contains: logo, search, account, cart, index trigger.
+  Supports app blocks (@app) for third-party integrations.
+{%- endcomment -%}
+
+<header
+  class="header{% if section.settings.sticky %} header--sticky{% endif %}"
+  role="banner"
+  data-header
+>
   <div class="header__inner container">
-    <a href="{{ routes.root_url }}" class="header__logo">
+    <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
         {{ section.settings.logo | image_url: width: 240 | image_tag:
           loading: 'eager',
           fetchpriority: 'high',
-          alt: shop.name
+          alt: shop.name,
+          class: 'header__logo-image',
+          widths: '120, 180, 240',
+          sizes: '120px'
         }}
       {%- else -%}
         <span class="header__shop-name">{{ shop.name }}</span>
       {%- endif -%}
     </a>
 
+    {%- if section.blocks.size > 0 -%}
+      <div class="header__app-blocks">
+        {%- for block in section.blocks -%}
+          {%- if block.type == '@app' -%}
+            {% render block %}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
     <div class="header__actions">
       {%- if section.settings.show_search -%}
-        <a
-          href="{{ routes.search_url }}"
+        <button
+          type="button"
           class="header__action"
+          data-search-open
           aria-label="{{ 'accessibility.search' | t }}"
+          aria-haspopup="dialog"
+          aria-expanded="false"
         >
           {%- render 'icon-search' -%}
-        </a>
+        </button>
       {%- endif -%}
 
       {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
@@ -30,14 +56,19 @@
       {%- endif -%}
 
       {%- if section.settings.show_cart -%}
-        <a
-          href="{{ routes.cart_url }}"
+        <button
+          type="button"
           class="header__action header__action--cart"
+          data-cart-open
           aria-label="{{ 'accessibility.cart' | t }}"
+          aria-haspopup="dialog"
+          aria-expanded="false"
         >
           <span class="header__cart-label">{{ 'cart.title' | t }}</span>
-          <span class="header__cart-count" data-cart-count>{{ cart.item_count }}</span>
-        </a>
+          <span class="header__cart-count{% if cart.item_count == 0 %} header__cart-count--empty{% endif %}" data-cart-count>
+            {{- cart.item_count -}}
+          </span>
+        </button>
       {%- endif -%}
 
       <button
@@ -45,6 +76,7 @@
         class="header__action header__action--index"
         data-site-index-open
         aria-label="{{ 'general.open_index' | t }}"
+        aria-haspopup="dialog"
       >
         <span class="header__index-label">{{ section.settings.index_label | default: 'Index' }}</span>
         {%- render 'icon-menu' -%}
@@ -56,13 +88,18 @@
 {% schema %}
 {
   "name": "Header",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
   "settings": [
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true },
     { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
     { "type": "checkbox", "id": "show_account", "label": "Show account", "default": true },
     { "type": "checkbox", "id": "show_cart", "label": "Show cart", "default": true },
-    { "type": "text", "id": "index_label", "label": "Index label", "default": "Index" }
+    { "type": "text", "id": "index_label", "label": "Index button label", "default": "Index" }
   ]
 }
 {% endschema %}

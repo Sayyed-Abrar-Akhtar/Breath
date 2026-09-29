@@ -1,0 +1,157 @@
+{%- comment -%}
+  Cart drawer.
+  Renders as a dialog with full focus management.
+  Updated via the Section Rendering API on cart change.
+{%- endcomment -%}
+
+<cart-drawer
+  class="cart-drawer"
+  data-cart-drawer
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cart-drawer-title"
+>
+  <div class="cart-drawer__backdrop" data-cart-close aria-hidden="true"></div>
+
+  <div class="cart-drawer__panel" role="document">
+    <div class="cart-drawer__header">
+      <h2 class="cart-drawer__title" id="cart-drawer-title">
+        {{ 'cart.title' | t }}
+        <span class="cart-drawer__count" data-cart-drawer-count>
+          {{ cart.item_count }}
+        </span>
+      </h2>
+      <button
+        type="button"
+        class="cart-drawer__close"
+        data-cart-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {%- render 'icon-close' -%}
+      </button>
+    </div>
+
+    <div class="cart-drawer__body" data-cart-drawer-body>
+      {%- if cart.item_count > 0 -%}
+        <ul class="cart-drawer__items" role="list">
+          {%- for item in cart.items -%}
+            <li class="cart-drawer__item" data-cart-line-item="{{ item.key }}">
+              {%- if item.image -%}
+                <a href="{{ item.url }}" class="cart-drawer__item-media" tabindex="-1">
+                  {% render 'responsive-image',
+                    image: item.image,
+                    sizes: '80px',
+                    loading: 'lazy',
+                    aspect_ratio: '1 / 1',
+                    class: 'cart-drawer__item-image'
+                  %}
+                </a>
+              {%- endif -%}
+
+              <div class="cart-drawer__item-info">
+                <a href="{{ item.url }}" class="cart-drawer__item-title">
+                  {{ item.product.title }}
+                </a>
+
+                {%- unless item.product.has_only_default_variant -%}
+                  <p class="cart-drawer__item-variant">
+                    {{ item.variant.title }}
+                  </p>
+                {%- endunless -%}
+
+                {%- if item.selling_plan_allocation -%}
+                  <p class="cart-drawer__item-plan">
+                    {{ item.selling_plan_allocation.selling_plan.name }}
+                  </p>
+                {%- endif -%}
+
+                {%- for discount in item.line_level_discount_allocations -%}
+                  <p class="cart-drawer__item-discount">
+                    {{ discount.discount_application.title }} (-{{ discount.amount | money }})
+                  </p>
+                {%- endfor -%}
+
+                <div class="cart-drawer__item-bottom">
+                  {% render 'quantity-input',
+                    name: 'updates[]',
+                    value: item.quantity,
+                    min: item.variant.quantity_rule.min | default: 1,
+                    max: item.variant.quantity_rule.max,
+                    id: 'cart-qty-' | append: item.key,
+                    class: 'cart-drawer__quantity'
+                  %}
+
+                  <div class="cart-drawer__item-price">
+                    {% render 'price',
+                      price: item.final_line_price,
+                      compare_at_price: item.original_line_price,
+                      show_compare_at: true
+                    %}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                class="cart-drawer__item-remove"
+                data-cart-remove
+                data-line-key="{{ item.key }}"
+                aria-label="{{ 'cart.remove' | t }}: {{ item.product.title | escape }}"
+              >
+                {%- render 'icon-close' -%}
+              </button>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        <div class="cart-drawer__footer">
+          {%- if cart.cart_level_discount_applications.size > 0 -%}
+            <ul class="cart-drawer__discounts" role="list">
+              {%- for discount in cart.cart_level_discount_applications -%}
+                <li class="cart-drawer__discount">
+                  <span>{{ discount.title }}</span>
+                  <span>-{{ discount.total_allocated_amount | money }}</span>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          <div class="cart-drawer__subtotal">
+            <span>{{ 'cart.subtotal' | t }}</span>
+            <span data-cart-subtotal>{{ cart.total_price | money }}</span>
+          </div>
+
+          {%- if cart.taxes_included -%}
+            <p class="cart-drawer__tax-note">
+              {{ 'cart.taxes_included' | t | default: 'Tax included. Shipping calculated at checkout.' }}
+            </p>
+          {%- endif -%}
+
+          <form action="{{ routes.cart_url }}" method="post" class="cart-drawer__actions">
+            <button type="submit" name="checkout" class="button button--primary cart-drawer__checkout">
+              {{ 'cart.checkout' | t }}
+            </button>
+
+            {%- if additional_checkout_buttons -%}
+              <div class="cart-drawer__accelerated">
+                {{ content_for_additional_checkout_buttons }}
+              </div>
+            {%- endif -%}
+
+            <button type="button" class="cart-drawer__continue" data-cart-close>
+              {{ 'cart.continue_shopping' | t }}
+            </button>
+          </form>
+        </div>
+      {%- else -%}
+        <div class="cart-drawer__empty">
+          <p class="cart-drawer__empty-title">{{ 'cart.empty' | t }}</p>
+          <button type="button" class="button button--secondary" data-cart-close>
+            {{ 'cart.continue_shopping' | t }}
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</cart-drawer>
