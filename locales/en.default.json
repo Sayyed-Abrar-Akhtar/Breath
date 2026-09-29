@@ -9,7 +9,8 @@
     "previous": "Previous",
     "next": "Next",
     "loading": "Loading",
-    "announcement": "Announcement"
+    "announcement": "Announcement",
+    "breadcrumb": "Breadcrumb"
   },
   "general": {
     "home": "Home",
@@ -36,6 +37,25 @@
       "details": "Details",
       "materials": "Materials",
       "view_product": "View product"
+    },
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "purchase_options": "Purchase options",
+      "one_time": "One-time purchase",
+      "taxes_note": "Tax included.",
+      "shipping_link": "Shipping"
+    },
+    "media": {
+      "thumbnails": "Product media"
+    },
+    "pickup": {
+      "check": "Check availability",
+      "available": "Pickup available",
+      "unavailable": "Pickup currently unavailable",
+      "ready_in": "Ready in"
     }
   },
   "facets": {

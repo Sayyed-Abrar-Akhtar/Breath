@@ -1,0 +1,266 @@
+{%- comment -%}
+  Main product section — block host.
+  All product elements are blocks so merchants can reorder, remove, or add.
+  Supports @app blocks from installed apps.
+{%- endcomment -%}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<section
+  class="main-product"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle }}"
+  data-section-type="main-product"
+  itemscope
+  itemtype="https://schema.org/Product"
+>
+  <meta itemprop="name" content="{{ product.title | escape }}">
+  <meta itemprop="url" content="{{ shop.url }}{{ product.url }}">
+
+  {% render 'wayfinder',
+    path: product.path,
+    next_step: product.next_step
+  %}
+
+  <div class="container">
+    <div class="main-product__grid main-product__grid--{{ section.settings.layout }}">
+      <div class="main-product__media">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'media_gallery' -%}
+            <div class="main-product__media-inner" {{ block.shopify_attributes }}>
+              {% render 'product-media',
+                product: product,
+                current_variant: current_variant,
+                layout: block.settings.layout
+              %}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="main-product__info">
+        {%- for block in section.blocks -%}
+          {%- unless block.type == 'media_gallery' -%}
+            {%- case block.type -%}
+              {%- when '@app' -%}
+                <div class="main-product__block main-product__block--app" {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
+
+              {%- when 'title' -%}
+                <div class="main-product__block" {{ block.shopify_attributes }}>
+                  <h1 class="main-product__title" itemprop="name">{{ product.title }}</h1>
+                </div>
+
+              {%- when 'vendor' -%}
+                {%- if product.vendor != blank -%}
+                  <div class="main-product__block" {{ block.shopify_attributes }}>
+                    <p class="main-product__vendor">
+                      <a href="{{ product.vendor | url_for_vendor }}">{{ product.vendor }}</a>
+                    </p>
+                  </div>
+                {%- endif -%}
+
+              {%- when 'price' -%}
+                <div class="main-product__block main-product__block--price" {{ block.shopify_attributes }}>
+                  <div
+                    class="main-product__price"
+                    data-product-price
+                    itemprop="offers"
+                    itemscope
+                    itemtype="https://schema.org/Offer"
+                  >
+                    <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
+                    <meta itemprop="price" content="{{ current_variant.price | money_without_currency | strip_html | replace: ',', '' }}">
+
+                    {% render 'price',
+                      variant: current_variant,
+                      show_compare_at: true,
+                      size: 'lg'
+                    %}
+
+                    {%- if current_variant.available -%}
+                      <link itemprop="availability" href="https://schema.org/InStock">
+                    {%- else -%}
+                      <link itemprop="availability" href="https://schema.org/OutOfStock">
+                    {%- endif -%}
+                  </div>
+
+                  {%- if block.settings.show_taxes_note -%}
+                    <p class="main-product__tax-note">
+                      {{ 'products.product.taxes_note' | t | default: 'Tax included.' }}
+                      <a href="{{ routes.cart_url }}">{{ 'products.product.shipping_link' | t | default: 'Shipping' }}</a>
+                    </p>
+                  {%- endif -%}
+                </div>
+
+              {%- when 'description' -%}
+                {%- if product.description != blank -%}
+                  <div class="main-product__block main-product__block--description" {{ block.shopify_attributes }}>
+                    <div class="rte" itemprop="description">
+                      {{ product.description }}
+                    </div>
+                  </div>
+                {%- endif -%}
+
+              {%- when 'variant_picker' -%}
+                <div class="main-product__block" {{ block.shopify_attributes }}>
+                  {% render 'product-variant-picker',
+                    product: product,
+                    current_variant: current_variant,
+                    section_id: section.id
+                  %}
+                </div>
+
+              {%- when 'quantity' -%}
+                <div class="main-product__block main-product__block--quantity" {{ block.shopify_attributes }}>
+                  {% render 'quantity-input',
+                    name: 'quantity',
+                    value: 1,
+                    min: current_variant.quantity_rule.min | default: 1,
+                    max: current_variant.quantity_rule.max,
+                    id: 'product-quantity'
+                  %}
+                </div>
+
+              {%- when 'buy_buttons' -%}
+                <div class="main-product__block main-product__block--buy" {{ block.shopify_attributes }}>
+                  {% render 'product-form',
+                    product: product,
+                    current_variant: current_variant,
+                    section_id: section.id
+                  %}
+                </div>
+
+              {%- when 'pickup' -%}
+                <div class="main-product__block" {{ block.shopify_attributes }}>
+                  {% render 'product-pickup',
+                    product: product,
+                    current_variant: current_variant
+                  %}
+                </div>
+
+              {%- when 'shop_pay_installments' -%}
+                <div class="main-product__block" {{ block.shopify_attributes }}>
+                  {% render 'product-shop-pay-installments', variant: current_variant %}
+                </div>
+
+              {%- when 'collapsible' -%}
+                <div class="main-product__block" {{ block.shopify_attributes }}>
+                  {%- capture collapsible_content -%}
+                    <div class="rte">{{ block.settings.content }}</div>
+                  {%- endcapture -%}
+
+                  {% render 'disclosure',
+                    id: 'product-collapsible-' | append: block.id,
+                    title: block.settings.heading,
+                    content: collapsible_content,
+                    default_open: block.settings.default_open
+                  %}
+                </div>
+
+              {%- when 'text' -%}
+                <div class="main-product__block main-product__block--text" {{ block.shopify_attributes }}>
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="main-product__text-heading">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="rte">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                </div>
+
+              {%- when 'custom_liquid' -%}
+                <div class="main-product__block" {{ block.shopify_attributes }}>
+                  {{ block.settings.custom_liquid }}
+                </div>
+            {%- endcase -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "media_gallery",
+      "name": "Media gallery",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            { "value": "stacked", "label": "Stacked (single column)" },
+            { "value": "grid", "label": "Grid (2 columns)" },
+            { "value": "carousel", "label": "Carousel" }
+          ],
+          "default": "stacked"
+        }
+      ]
+    },
+    { "type": "title", "name": "Title", "limit": 1 },
+    { "type": "vendor", "name": "Vendor", "limit": 1 },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_taxes_note", "label": "Show tax note", "default": true }
+      ]
+    },
+    { "type": "variant_picker", "name": "Variant picker", "limit": 1 },
+    { "type": "quantity", "name": "Quantity", "limit": 1 },
+    { "type": "buy_buttons", "name": "Buy buttons", "limit": 1 },
+    { "type": "pickup", "name": "Pickup availability", "limit": 1 },
+    { "type": "shop_pay_installments", "name": "Shop Pay Installments", "limit": 1 },
+    { "type": "description", "name": "Description", "limit": 1 },
+    {
+      "type": "collapsible",
+      "name": "Collapsible row",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Details" },
+        { "type": "richtext", "id": "content", "label": "Content" },
+        { "type": "checkbox", "id": "default_open", "label": "Open by default", "default": false }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text block",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        { "type": "liquid", "id": "custom_liquid", "label": "Liquid" }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "media-first", "label": "Media first" },
+        { "value": "info-first", "label": "Info first" }
+      ],
+      "default": "media-first"
+    }
+  ]
+}
+{% endschema %}

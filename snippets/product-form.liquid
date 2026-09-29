@@ -1,0 +1,57 @@
+{%- comment -%}
+  Product form — add to cart, selling plans, accelerated checkout.
+  Wrapped in a custom element for variant reactivity.
+{%- endcomment -%}
+
+<product-form
+  class="product-form"
+  data-section-id="{{ section_id }}"
+  data-product-id="{{ product.id }}"
+>
+  {%- form 'product',
+    product,
+    id: 'product-form-' | append: section_id,
+    class: 'product-form__form',
+    novalidate: 'novalidate'
+  -%}
+    <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+    {%- unless product.has_only_default_variant -%}
+      <input type="hidden" name="options" value="">
+    {%- endunless -%}
+
+    {%- if product.selling_plan_groups.size > 0 -%}
+      {% render 'product-selling-plans', product: product, current_variant: current_variant %}
+    {%- endif -%}
+
+    <div class="product-form__buttons">
+      <button
+        type="submit"
+        name="add"
+        class="button button--primary product-form__add"
+        {% unless current_variant.available %}disabled{% endunless %}
+        data-add-to-cart
+      >
+        <span data-add-to-cart-text>
+          {%- if current_variant.available -%}
+            {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t | default: 'Sold out' }}
+          {%- endif -%}
+        </span>
+      </button>
+
+      {%- if additional_checkout_buttons -%}
+        <div class="product-form__accelerated">
+          {{ content_for_additional_checkout_buttons }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if form.errors -%}
+      <div class="product-form__errors" role="alert">
+        {{ form.errors | default_errors }}
+      </div>
+    {%- endif -%}
+  {%- endform -%}
+</product-form>

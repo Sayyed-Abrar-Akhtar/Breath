@@ -9,6 +9,7 @@ import "./quantity-input.js";
 import "./facets.js";
 import "./cart-drawer.js";
 import "./search-overlay.js";
+import "./product-form.js";
 
 /* Cart count live update */
 document.addEventListener("cart:updated", (event) => {
@@ -21,3 +22,10 @@ document.addEventListener("cart:updated", (event) => {
     );
   }
 });
+
+/* Expose strings for JS */
+window.theme = window.theme || {};
+window.theme.strings = {
+  add_to_cart: "Add to cart",
+  sold_out: "Sold out",
+};
