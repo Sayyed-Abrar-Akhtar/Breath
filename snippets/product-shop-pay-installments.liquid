@@ -1,0 +1,20 @@
+{%- comment -%}
+  Shop Pay Installments banner.
+  Renders when the shop has installments enabled and the variant is eligible.
+  Do NOT modify the branded colors.
+{%- endcomment -%}
+
+{%- if shop.enabled_payment_types contains 'shopify_installments' -%}
+  <div class="shop-pay-installments" data-shop-pay-installments>
+    {%- form 'product', product, id: 'installments-form-' | append: section_id -%}
+      <input type="hidden" name="id" value="{{ variant.id }}">
+
+      {{ form | payment_terms }}
+
+      <shopify-payment-terms
+        variant-id="{{ variant.id }}"
+        shopify-meta="{{ shop | json | escape }}"
+      ></shopify-payment-terms>
+    {%- endform -%}
+  </div>
+{%- endif -%}

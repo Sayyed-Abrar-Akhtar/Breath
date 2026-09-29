@@ -8,7 +8,9 @@
     "account": "Account",
     "previous": "Previous",
     "next": "Next",
-    "loading": "Loading"
+    "loading": "Loading",
+    "announcement": "Announcement",
+    "breadcrumb": "Breadcrumb"
   },
   "general": {
     "home": "Home",
@@ -35,11 +37,43 @@
       "details": "Details",
       "materials": "Materials",
       "view_product": "View product"
+    },
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quantity": "Quantity",
+      "purchase_options": "Purchase options",
+      "one_time": "One-time purchase",
+      "taxes_note": "Tax included.",
+      "shipping_link": "Shipping"
+    },
+    "media": {
+      "thumbnails": "Product media"
+    },
+    "pickup": {
+      "check": "Check availability",
+      "available": "Pickup available",
+      "unavailable": "Pickup currently unavailable",
+      "ready_in": "Ready in"
     }
   },
+  "facets": {
+    "title": "Filter by",
+    "clear_all": "Clear all",
+    "apply": "Apply filters",
+    "active_filters": "Active filters",
+    "remove_filter": "Remove filter",
+    "sort_by": "Sort by",
+    "from": "From",
+    "to": "To",
+    "no_results": "No products match your filters"
+  },
   "search": {
+    "title": "Search",
     "placeholder": "Search",
     "submit": "Search",
+    "suggestions": "Popular",
     "no_results": "No results for \"{{ terms }}\"",
     "results_with_count": {
       "one": "{{ count }} result",
@@ -52,8 +86,18 @@
     "continue_shopping": "Continue shopping",
     "checkout": "Checkout",
     "subtotal": "Subtotal",
+    "taxes_included": "Tax included. Shipping calculated at checkout.",
     "quantity": "Quantity",
+    "quantity_decrease": "Decrease quantity",
+    "quantity_increase": "Increase quantity",
     "remove": "Remove"
+  },
+  "newsletter": {
+    "heading": "Stay in touch",
+    "email_label": "Email",
+    "email_placeholder": "Email address",
+    "submit": "Subscribe",
+    "success": "Thanks for subscribing."
   },
   "footer": {
     "localization": "Country/region",

@@ -1,0 +1,155 @@
+/* ── Section primitives ───────────────────────────────── */
+
+.section {
+  padding-block: var(--space-12);
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding-block: var(--space-16);
+  }
+}
+
+.section__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .section__header {
+    margin-bottom: var(--space-8);
+  }
+}
+
+.section__heading {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+  margin: 0;
+}
+
+.section__view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.section__view-all:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.section__next {
+  margin-top: var(--space-6);
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Rich Text Elements (RTE) ─────────────────────────── */
+
+.rte {
+  line-height: var(--line-height-loose);
+  color: inherit;
+}
+
+.rte > * + * {
+  margin-top: var(--space-3);
+}
+
+.rte h1 {
+  font-size: var(--font-size-3xl);
+  margin-top: var(--space-6);
+}
+.rte h2 {
+  font-size: var(--font-size-2xl);
+  margin-top: var(--space-6);
+}
+.rte h3 {
+  font-size: var(--font-size-xl);
+  margin-top: var(--space-4);
+}
+.rte h4 {
+  font-size: var(--font-size-lg);
+  margin-top: var(--space-4);
+}
+.rte h5,
+.rte h6 {
+  font-size: var(--font-size-base);
+  margin-top: var(--space-3);
+}
+
+.rte h1:first-child,
+.rte h2:first-child,
+.rte h3:first-child {
+  margin-top: 0;
+}
+
+.rte ul,
+.rte ol {
+  padding-left: var(--space-4);
+}
+
+.rte li + li {
+  margin-top: var(--space-1);
+}
+
+.rte blockquote {
+  margin: var(--space-4) 0;
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--color-accent);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.rte img {
+  border-radius: var(--border-radius);
+  height: auto;
+}
+
+.rte a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.rte a:hover {
+  color: var(--color-text);
+}
+
+.rte table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: var(--space-4);
+}
+
+.rte th,
+.rte td {
+  padding: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border);
+  text-align: left;
+}
+
+.rte th {
+  font-weight: 500;
+}
+
+.rte hr {
+  border: 0;
+  border-top: var(--border-width) solid var(--color-border);
+  margin-block: var(--space-6);
+}
+
+/* ── Main Page ────────────────────────────────────────── */
+
+.main-page__header {
+  margin-bottom: var(--space-8);
+}
+
+.main-page__title {
+  font-size: var(--font-size-3xl);
+  margin: 0;
+}

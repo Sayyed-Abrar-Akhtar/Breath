@@ -1,0 +1,39 @@
+{%- if product.selling_plan_groups.size > 0 -%}
+  <div class="selling-plans">
+    <fieldset class="selling-plans__fieldset">
+      <legend class="selling-plans__legend">
+        {{ 'products.product.purchase_options' | t | default: 'Purchase options' }}
+      </legend>
+
+      <label class="selling-plans__option">
+        <input
+          type="radio"
+          name="selling_plan"
+          value=""
+          checked
+          class="selling-plans__input"
+        >
+        <span class="selling-plans__label">{{ 'products.product.one_time' | t | default: 'One-time purchase' }}</span>
+        <span class="selling-plans__price">{{ current_variant.price | money }}</span>
+      </label>
+
+      {%- for group in product.selling_plan_groups -%}
+        {%- for plan in group.selling_plans -%}
+          {%- assign allocation = current_variant.selling_plan_allocations | where: 'selling_plan_id', plan.id | first -%}
+          {%- if allocation -%}
+            <label class="selling-plans__option">
+              <input
+                type="radio"
+                name="selling_plan"
+                value="{{ plan.id }}"
+                class="selling-plans__input"
+              >
+              <span class="selling-plans__label">{{ plan.name }}</span>
+              <span class="selling-plans__price">{{ allocation.price | money }}</span>
+            </label>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    </fieldset>
+  </div>
+{%- endif -%}

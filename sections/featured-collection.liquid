@@ -1,0 +1,82 @@
+<section class="featured-collection section" data-section-id="{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank or section.settings.view_all_label != blank -%}
+      <header class="section__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="section__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.view_all_label != blank and collection != blank -%}
+          <a href="{{ collection.url }}" class="section__view-all">
+            {{ section.settings.view_all_label }}
+            <span aria-hidden="true">&#8594;</span>
+          </a>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    {%- assign featured_collection = collections[section.settings.collection] -%}
+
+    {%- if featured_collection != blank and featured_collection.products.size > 0 -%}
+      {%- capture grid_content -%}
+        {%- for product in featured_collection.products limit: section.settings.products_to_show -%}
+          {% render 'product-card',
+            product: product,
+            index: forloop.index0,
+            sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw'
+          %}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {% render 'reveal',
+        content: grid_content,
+        variant: 'stagger',
+        delay: 80,
+        class: 'product-grid'
+      %}
+    {%- else -%}
+      <div class="product-grid">
+        {%- for i in (1..4) -%}
+          <article class="product-card">
+            <div class="product-card__media">
+              <div class="product-card__image product-card__placeholder">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            </div>
+            <div class="product-card__info">
+              <h3 class="product-card__title">{{ 'onboarding.product_title' | t | default: 'Example product' }}</h3>
+              <div class="price"><span class="price__current">{{ 4200 | money }}</span></div>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if featured_collection != blank and section.settings.show_next_step -%}
+      <div class="section__next">
+        {% render 'signpost',
+          label: section.settings.next_label | default: 'Browse all collections',
+          url: routes.collections_url,
+          context: featured_collection.all_products_count | append: ' ' | append: 'pieces',
+          style: 'text'
+        %}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured collection",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured" },
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "text", "id": "view_all_label", "label": "\"View all\" label", "default": "View all" },
+    { "type": "header", "content": "Next step" },
+    { "type": "checkbox", "id": "show_next_step", "label": "Show next-step signpost", "default": true },
+    { "type": "text", "id": "next_label", "label": "Signpost label", "default": "Browse all collections" }
+  ],
+  "presets": [{ "name": "Featured collection" }]
+}
+{% endschema %}

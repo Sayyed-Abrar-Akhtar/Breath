@@ -1,0 +1,112 @@
+{%- comment -%}
+  Product media gallery.
+  Handles: images, native video, YouTube, Vimeo, 3D models.
+  Variant-aware: selecting a variant scrolls to / swaps to the matching media.
+
+  @param {product} product
+  @param {variant} current_variant
+  @param {string} [layout] - 'stacked' | 'grid' | 'carousel' (default: 'stacked')
+{%- endcomment -%}
+
+{%- liquid
+  assign gallery_layout = layout | default: 'stacked'
+  assign media_items = product.media
+-%}
+
+<div
+  class="product-media product-media--{{ gallery_layout }}"
+  data-product-media
+  data-current-media="{{ current_variant.featured_media.id | default: 0 }}"
+>
+  <div class="product-media__stage" data-product-media-stage>
+    {%- for media in media_items -%}
+      {%- assign is_active = false -%}
+      {%- if media.id == current_variant.featured_media.id -%}
+        {%- assign is_active = true -%}
+      {%- elsif forloop.first -%}
+        {%- assign is_active = true -%}
+      {%- endif -%}
+
+      <div
+        class="product-media__item{% if is_active %} is-active{% endif %}"
+        data-media-id="{{ media.id }}"
+        data-media-type="{{ media.media_type }}"
+        {% unless is_active %}hidden{% endunless %}
+      >
+        {%- case media.media_type -%}
+          {%- when 'image' -%}
+            {% render 'responsive-image',
+              image: media,
+              sizes: '(min-width: 1024px) 50vw, 100vw',
+              loading: is_active ? 'eager' : 'lazy',
+              fetchpriority: is_active ? 'high' : 'auto',
+              aspect_ratio: media.aspect_ratio,
+              class: 'product-media__image',
+              alt: media.alt | default: product.title
+            %}
+
+          {%- when 'video' -%}
+            {% render 'responsive-video',
+              media: media,
+              aspect_ratio: media.aspect_ratio,
+              controls: true
+            %}
+
+          {%- when 'external_video' -%}
+            {% render 'responsive-video',
+              media: media,
+              aspect_ratio: media.aspect_ratio,
+              controls: true
+            %}
+
+          {%- when 'model' -%}
+            {% render 'responsive-video',
+              media: media,
+              aspect_ratio: media.aspect_ratio
+            %}
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if media_items.size > 1 -%}
+    <div class="product-media__thumbnails" role="tablist" aria-label="{{ 'products.media.thumbnails' | t | default: 'Product media' }}">
+      {%- for media in media_items -%}
+        {%- assign is_active = false -%}
+        {%- if media.id == current_variant.featured_media.id or forloop.first -%}
+          {%- assign is_active = true -%}
+        {%- endif -%}
+
+        <button
+          type="button"
+          class="product-media__thumb{% if is_active %} is-active{% endif %}"
+          data-product-media-thumb
+          data-media-id="{{ media.id }}"
+          role="tab"
+          aria-selected="{% if is_active %}true{% else %}false{% endif %}"
+          aria-controls="product-media-{{ media.id }}"
+        >
+          {%- if media.preview_image -%}
+            {% render 'responsive-image',
+              image: media.preview_image,
+              sizes: '80px',
+              loading: 'lazy',
+              aspect_ratio: '1 / 1',
+              class: 'product-media__thumb-image'
+            %}
+          {%- endif -%}
+
+          {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+            <span class="product-media__thumb-icon" aria-hidden="true">
+              {%- render 'icon-play' -%}
+            </span>
+          {%- elsif media.media_type == 'model' -%}
+            <span class="product-media__thumb-icon" aria-hidden="true">
+              {%- render 'icon-3d' -%}
+            </span>
+          {%- endif -%}
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>

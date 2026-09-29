@@ -1,0 +1,51 @@
+{%- comment -%}
+  Pickup availability.
+  Renders without requiring add-to-cart.
+{%- endcomment -%}
+
+{%- if current_variant.store_availabilities.size > 0 -%}
+  <div class="product-pickup" data-product-pickup>
+    {%- assign pickup = current_variant.store_availabilities | where: 'available', true | first -%}
+    {%- assign any_available = current_variant.store_availabilities | where: 'available', true -%}
+
+    {%- if any_available.size > 0 -%}
+      {%- capture pickup_content -%}
+        <ul class="product-pickup__list" role="list">
+          {%- for availability in current_variant.store_availabilities -%}
+            {%- if availability.available -%}
+              <li class="product-pickup__item">
+                <p class="product-pickup__store">
+                  <strong>{{ availability.location.name }}</strong>
+                </p>
+                <p class="product-pickup__status product-pickup__status--available">
+                  {{ 'products.pickup.available' | t | default: 'Pickup available' }}
+                </p>
+                {%- if availability.pick_up_time -%}
+                  <p class="product-pickup__time">
+                    {{ 'products.pickup.ready_in' | t | default: 'Ready in' }}
+                    {{ availability.pick_up_time | downcase }}
+                  </p>
+                {%- endif -%}
+                {%- if availability.location.address -%}
+                  <p class="product-pickup__address">
+                    {{ availability.location.address | format_address }}
+                  </p>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endcapture -%}
+
+      {% render 'disclosure',
+        id: 'product-pickup-details',
+        title: 'products.pickup.check' | t | default: 'Check availability',
+        content: pickup_content
+      %}
+    {%- else -%}
+      <p class="product-pickup__unavailable">
+        {{ 'products.pickup.unavailable' | t | default: 'Pickup currently unavailable' }}
+      </p>
+    {%- endif -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,46 @@
+{%- comment -%}
+  Sort dropdown for collections and search results.
+
+  @param {object} source - collection or search object with sort_by and sort_options
+  @param {string} [class] - Additional CSS classes
+
+  @example
+    {% render 'sort-dropdown', source: collection %}
+{%- endcomment -%}
+
+{%- liquid
+  assign sort_class = 'sort-dropdown'
+  if class != blank
+    assign sort_class = sort_class | append: ' ' | append: class
+  endif
+
+  # Build options array with selected state
+  assign sort_options = source.sort_options
+-%}
+
+<div class="{{ sort_class }}" data-sort-dropdown>
+  <label for="sort-by" class="sort-dropdown__label">
+    {{ 'facets.sort_by' | t | default: 'Sort by' }}
+  </label>
+
+  <div class="sort-dropdown__wrapper">
+    <select
+      id="sort-by"
+      name="sort_by"
+      class="sort-dropdown__select"
+      data-sort-select
+    >
+      {%- for option in sort_options -%}
+        <option
+          value="{{ option.value }}"
+          {% if option.value == source.sort_by %}selected{% endif %}
+        >
+          {{ option.name }}
+        </option>
+      {%- endfor -%}
+    </select>
+    <span class="sort-dropdown__icon" aria-hidden="true">
+      {%- render 'icon-chevron' -%}
+    </span>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+{%- comment -%}
+  Related product recommendations.
+  Uses the Shopify product recommendations API.
+{%- endcomment -%}
+
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  <section class="related-products section" data-section-id="{{ section.id }}">
+    <div class="container">
+      {%- if section.settings.heading != blank -%}
+        <header class="section__header">
+          <h2 class="section__heading">{{ section.settings.heading | escape }}</h2>
+        </header>
+      {%- endif -%}
+
+      {%- capture grid_content -%}
+        {%- for product in recommendations.products -%}
+          {% render 'product-card',
+            product: product,
+            index: forloop.index0,
+            sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw'
+          %}
+        {%- endfor -%}
+      {%- endcapture -%}
+
+      {% render 'reveal',
+        content: grid_content,
+        variant: 'stagger',
+        delay: 80,
+        class: 'product-grid'
+      %}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Related products",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Complete the set" }
+  ],
+  "presets": [{ "name": "Related products" }]
+}
+{% endschema %}

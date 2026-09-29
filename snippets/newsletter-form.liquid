@@ -1,0 +1,68 @@
+{%- comment -%}
+  Newsletter signup form using Shopify's customer form.
+
+  @param {string} [heading] - Optional heading
+  @param {string} [subheading] - Optional subheading
+  @param {string} [class] - Additional CSS classes
+  @param {string} [id] - Unique form id (for multiple forms on a page)
+
+  @example
+    {% render 'newsletter-form', heading: 'Stay in touch' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign form_id = id | default: 'newsletter'
+  assign form_class = 'newsletter'
+  if class != blank
+    assign form_class = form_class | append: ' ' | append: class
+  endif
+-%}
+
+<div class="{{ form_class }}">
+  {%- if heading -%}
+    <h2 class="newsletter__heading">{{ heading }}</h2>
+  {%- endif -%}
+
+  {%- if subheading -%}
+    <p class="newsletter__subheading">{{ subheading }}</p>
+  {%- endif -%}
+
+  {%- form 'customer', id: form_id, class: 'newsletter__form' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+
+    {%- if form.posted_successfully? -%}
+      <p class="newsletter__success" role="status">
+        {{ 'newsletter.success' | t | default: 'Thanks for subscribing.' }}
+      </p>
+    {%- elsif form.errors -%}
+      <p class="newsletter__error" role="alert">
+        {{ form.errors.translated_fields.email | capitalize }}
+        {{ form.errors.messages.email }}
+      </p>
+    {%- endif -%}
+
+    <div class="newsletter__field">
+      <label for="{{ form_id }}-email" class="visually-hidden">
+        {{ 'newsletter.email_label' | t | default: 'Email' }}
+      </label>
+
+      <input
+        type="email"
+        id="{{ form_id }}-email"
+        name="contact[email]"
+        class="newsletter__input"
+        value="{{ form.email }}"
+        placeholder="{{ 'newsletter.email_placeholder' | t | default: 'Email address' }}"
+        autocomplete="email"
+        autocorrect="off"
+        autocapitalize="off"
+        required
+        {% if form.errors %}aria-invalid="true"{% endif %}
+      >
+
+      <button type="submit" class="newsletter__button">
+        {{ 'newsletter.submit' | t | default: 'Subscribe' }}
+      </button>
+    </div>
+  {%- endform -%}
+</div>

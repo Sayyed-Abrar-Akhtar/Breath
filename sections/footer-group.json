@@ -5,8 +5,11 @@
     "footer": {
       "type": "footer",
       "settings": {
+        "tagline": "A slower way to browse.",
         "show_localization": true,
-        "show_payment_icons": true
+        "show_social": true,
+        "show_payment_icons": true,
+        "show_policies": true
       }
     },
     "site-index": {

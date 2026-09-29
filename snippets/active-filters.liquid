@@ -1,0 +1,48 @@
+{%- comment -%}
+  Active filter pills with individual remove links.
+
+  @param {object} source - collection or search object
+{%- endcomment -%}
+
+<div class="active-filters" role="region" aria-label="{{ 'facets.active_filters' | t | default: 'Active filters' }}">
+  <ul class="active-filters__list" role="list">
+    {%- for filter in source.filters -%}
+      {%- for value in filter.active_values -%}
+        <li class="active-filters__item">
+          <a href="{{ value.url_to_remove }}" class="active-filters__pill">
+            <span class="active-filters__label">
+              {{ filter.label }}: {{ value.label }}
+            </span>
+            <span class="active-filters__remove" aria-hidden="true">
+              {%- render 'icon-close' -%}
+            </span>
+            <span class="visually-hidden">
+              {{ 'facets.remove_filter' | t | default: 'Remove filter' }}
+            </span>
+          </a>
+        </li>
+      {%- endfor -%}
+
+      {%- if filter.type == 'price_range' -%}
+        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+          <li class="active-filters__item">
+            <a href="{{ filter.url_to_remove }}" class="active-filters__pill">
+              <span class="active-filters__label">
+                {%- if filter.min_value.value and filter.max_value.value -%}
+                  {{ filter.min_value.value | money }} – {{ filter.max_value.value | money }}
+                {%- elsif filter.min_value.value -%}
+                  {{ 'facets.from' | t | default: 'From' }} {{ filter.min_value.value | money }}
+                {%- else -%}
+                  {{ 'facets.to' | t | default: 'Up to' }} {{ filter.max_value.value | money }}
+                {%- endif -%}
+              </span>
+              <span class="active-filters__remove" aria-hidden="true">
+                {%- render 'icon-close' -%}
+              </span>
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</div>
