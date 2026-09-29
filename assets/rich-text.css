@@ -1,0 +1,32 @@
+.rich-text__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
+  align-items: center;
+}
+
+.rich-text__eyebrow {
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.rich-text__heading {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+  margin: 0;
+  max-width: 24ch;
+}
+
+.rich-text__body {
+  color: var(--color-text-muted);
+  line-height: var(--line-height-loose);
+  max-width: 56ch;
+}
+
+.rich-text__cta {
+  margin-top: var(--space-2);
+}

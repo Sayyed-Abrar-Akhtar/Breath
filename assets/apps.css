@@ -1,0 +1,9 @@
+.apps-section__blocks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.apps-section__block:empty {
+  display: none;
+}

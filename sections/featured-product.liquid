@@ -1,0 +1,160 @@
+{%- comment -%}
+  Featured product section.
+  Supports @app blocks and per-element blocks (price, description, etc.).
+{%- endcomment -%}
+
+{%- assign product = section.settings.product -%}
+
+<section class="featured-product section" data-section-id="{{ section.id }}">
+  <div class="container">
+    {%- if product != blank -%}
+      <div class="featured-product__grid">
+        <div class="featured-product__media">
+          {%- if product.featured_image -%}
+            {% render 'responsive-image',
+              image: product.featured_image,
+              sizes: '(min-width: 1024px) 50vw, 100vw',
+              loading: 'lazy',
+              aspect_ratio: '4 / 5',
+              class: 'featured-product__image'
+            %}
+          {%- endif -%}
+        </div>
+
+        <div class="featured-product__info">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+              {%- when 'title' -%}
+                <h2 class="featured-product__title" {{ block.shopify_attributes }}>
+                  {{ product.title }}
+                </h2>
+
+              {%- when 'vendor' -%}
+                {%- if product.vendor != blank -%}
+                  <p class="featured-product__vendor" {{ block.shopify_attributes }}>
+                    {{ product.vendor }}
+                  </p>
+                {%- endif -%}
+
+              {%- when 'price' -%}
+                <div class="featured-product__price" {{ block.shopify_attributes }}>
+                  {% render 'price', product: product, size: 'lg' %}
+                </div>
+
+              {%- when 'description' -%}
+                {%- if product.description != blank -%}
+                  <div class="featured-product__description rte" {{ block.shopify_attributes }}>
+                    {{ product.description | strip_html | truncate: 240 }}
+                  </div>
+                {%- endif -%}
+
+              {%- when 'buy_buttons' -%}
+                <div class="featured-product__buy" {{ block.shopify_attributes }}>
+                  {%- form 'product', product, id: 'featured-product-form-' | append: section.id -%}
+                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                    <input type="hidden" name="quantity" value="1">
+
+                    <button
+                      type="submit"
+                      class="button button--primary featured-product__add"
+                      {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}
+                    >
+                      {%- if product.selected_or_first_available_variant.available -%}
+                        {{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}
+                      {%- else -%}
+                        {{ 'products.product.sold_out' | t | default: 'Sold out' }}
+                      {%- endif -%}
+                    </button>
+
+                    {%- if additional_checkout_buttons -%}
+                      <div class="featured-product__accelerated">
+                        {{ content_for_additional_checkout_buttons }}
+                      </div>
+                    {%- endif -%}
+                  {%- endform -%}
+                </div>
+
+              {%- when 'view_product' -%}
+                <div class="featured-product__view" {{ block.shopify_attributes }}>
+                  {% render 'signpost',
+                    label: 'View full product' | default: block.settings.label,
+                    url: product.url,
+                    context: product.metafields.custom.tagline,
+                    style: 'text'
+                  %}
+                </div>
+
+              {%- when '@app' -%}
+                <div class="featured-product__app" {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
+
+              {%- when 'custom_liquid' -%}
+                <div class="featured-product__custom rte" {{ block.shopify_attributes }}>
+                  {{ block.settings.custom_liquid }}
+                </div>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="featured-product__grid">
+        <div class="featured-product__media">
+          <div class="featured-product__image featured-product__placeholder">
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        </div>
+        <div class="featured-product__info">
+          <h2 class="featured-product__title">
+            {{ 'onboarding.product_title' | t | default: 'Example product' }}
+          </h2>
+          <div class="price"><span class="price__current">{{ 4200 | money }}</span></div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "blocks": [
+    { "type": "@app" },
+    { "type": "title", "name": "Title", "limit": 1 },
+    { "type": "vendor", "name": "Vendor", "limit": 1 },
+    { "type": "price", "name": "Price", "limit": 1 },
+    { "type": "description", "name": "Description", "limit": 1 },
+    { "type": "buy_buttons", "name": "Buy buttons", "limit": 1 },
+    {
+      "type": "view_product",
+      "name": "View product signpost",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "View full product" }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom Liquid",
+      "settings": [
+        { "type": "liquid", "id": "custom_liquid", "label": "Liquid" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "product", "id": "product", "label": "Product" }
+  ],
+  "presets": [
+    {
+      "name": "Featured product",
+      "blocks": [
+        { "type": "title" },
+        { "type": "price" },
+        { "type": "description" },
+        { "type": "buy_buttons" },
+        { "type": "view_product" }
+      ]
+    }
+  ]
+}
+{% endschema %}
