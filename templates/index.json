@@ -1,16 +1,69 @@
 {
   "sections": {
     "hero": {
-      "type": "reveal-demo",
+      "type": "hero",
       "settings": {
-        "heading": "Breath",
-        "subheading": "A slower way to browse."
+        "heading": "A slower way to browse",
+        "subheading": "Thoughtfully made objects for people who take their time.",
+        "cta_label": "Enter the collection",
+        "overlay_opacity": 30
       }
     },
-    "product-demo": {
-      "type": "product-grid-demo",
-      "settings": {}
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "New arrivals",
+        "products_to_show": 4,
+        "view_all_label": "View all",
+        "show_next_step": true,
+        "next_label": "Browse all collections"
+      }
+    },
+    "image-with-text": {
+      "type": "image-with-text",
+      "settings": {
+        "eyebrow": "Our story",
+        "heading": "Made by hand, in small batches",
+        "layout": "image-first",
+        "cta_label": "Read our story",
+        "cta_url": "/pages/about"
+      }
+    },
+    "collection-list": {
+      "type": "collection-list",
+      "settings": {
+        "heading": "Collections"
+      },
+      "blocks": {
+        "block-1": { "type": "collection", "settings": { "title": "Living" } },
+        "block-2": { "type": "collection", "settings": { "title": "Wearing" } },
+        "block-3": { "type": "collection", "settings": { "title": "Journal" } }
+      },
+      "block_order": ["block-1", "block-2", "block-3"]
+    },
+    "rich-text": {
+      "type": "rich-text",
+      "settings": {
+        "eyebrow": "Our philosophy",
+        "heading": "Fewer things, better made",
+        "cta_label": "Read the manifesto",
+        "cta_url": "/pages/manifesto"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Stay in touch",
+        "subheading": "One letter per month. No noise."
+      }
     }
   },
-  "order": ["hero", "product-demo"]
+  "order": [
+    "hero",
+    "featured-collection",
+    "image-with-text",
+    "collection-list",
+    "rich-text",
+    "newsletter"
+  ]
 }

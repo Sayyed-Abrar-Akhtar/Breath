@@ -1,0 +1,31 @@
+{%- comment -%}
+  MANDATORY SECTION.
+  Renders arbitrary Liquid from a `liquid` setting type.
+  Required by Shopify Theme Store for all section-supporting templates.
+{%- endcomment -%}
+
+<section class="custom-liquid section" data-section-id="{{ section.id }}">
+  <div class="container{% if section.settings.narrow %} container--narrow{% endif %}">
+    {%- if section.settings.custom_liquid != blank -%}
+      <div class="custom-liquid__content rte">
+        {{ section.settings.custom_liquid }}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Liquid",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "Custom Liquid",
+      "info": "Add app snippets or other Liquid code to create advanced customizations."
+    },
+    { "type": "checkbox", "id": "narrow", "label": "Use narrow container", "default": false }
+  ],
+  "presets": [{ "name": "Custom Liquid" }]
+}
+{% endschema %}

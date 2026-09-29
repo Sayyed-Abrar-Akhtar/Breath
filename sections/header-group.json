@@ -2,6 +2,13 @@
   "type": "header",
   "name": "Header group",
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Free shipping on orders over $100",
+        "show_localization": false
+      }
+    },
     "header": {
       "type": "header",
       "settings": {
@@ -13,5 +20,5 @@
       }
     }
   },
-  "order": ["header"]
+  "order": ["announcement-bar", "header"]
 }

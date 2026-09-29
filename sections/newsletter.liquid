@@ -1,0 +1,21 @@
+<section class="newsletter-section section" data-section-id="{{ section.id }}">
+  <div class="container container--narrow">
+    {% render 'newsletter-form',
+      heading: section.settings.heading,
+      subheading: section.settings.subheading,
+      id: 'newsletter-' | append: section.id,
+      class: 'newsletter-section__inner'
+    %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Stay in touch" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "One letter per month. No noise." }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

@@ -1,0 +1,65 @@
+{%- comment -%}
+  Full-screen search overlay.
+  Triggered by [data-search-open]. Closes on Escape or backdrop click.
+{%- endcomment -%}
+
+<div
+  class="search-overlay"
+  data-search-overlay
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="search-overlay-title"
+>
+  <div class="search-overlay__backdrop" data-search-close aria-hidden="true"></div>
+
+  <div class="search-overlay__panel container" role="document">
+    <div class="search-overlay__header">
+      <h2 class="search-overlay__title" id="search-overlay-title">
+        {{ 'search.title' | t | default: 'Search' }}
+      </h2>
+      <button
+        type="button"
+        class="search-overlay__close"
+        data-search-close
+        aria-label="{{ 'accessibility.close' | t }}"
+      >
+        {%- render 'icon-close' -%}
+      </button>
+    </div>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-overlay__form">
+      <label for="search-overlay-input" class="visually-hidden">
+        {{ 'search.placeholder' | t }}
+      </label>
+      <input
+        type="search"
+        id="search-overlay-input"
+        name="q"
+        class="search-overlay__input"
+        placeholder="{{ 'search.placeholder' | t }}"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="search-overlay__submit" aria-label="{{ 'search.submit' | t }}">
+        {%- render 'icon-search' -%}
+      </button>
+    </form>
+
+    {%- if section.settings.search_menu != blank -%}
+      <div class="search-overlay__suggestions">
+        <p class="search-overlay__suggestions-title">
+          {{ 'search.suggestions' | t | default: 'Popular' }}
+        </p>
+        <ul class="search-overlay__suggestions-list" role="list">
+          {%- for link in section.settings.search_menu.links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

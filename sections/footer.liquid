@@ -1,23 +1,45 @@
 <footer class="footer" role="contentinfo">
   <div class="footer__inner container">
-    <div class="footer__meta">
-      {%- if section.settings.show_localization -%}
-        {%- render 'localization-form' -%}
-      {%- endif -%}
-
-      {%- if section.settings.show_payment_icons -%}
-        <div class="footer__payments">
-          <span class="visually-hidden">{{ 'footer.payment_methods' | t }}</span>
-          {%- for type in shop.enabled_payment_types -%}
-            {{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}
-          {%- endfor -%}
-        </div>
+    <div class="footer__brand">
+      <h2 class="footer__brand-name">{{ shop.name }}</h2>
+      {%- if section.settings.tagline != blank -%}
+        <p class="footer__tagline">{{ section.settings.tagline | escape }}</p>
       {%- endif -%}
     </div>
 
-    <p class="footer__copyright">
-      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ powered_by_link }}
-    </p>
+    <div class="footer__meta">
+      {%- if section.settings.show_localization -%}
+        {% render 'localization-form' %}
+      {%- endif -%}
+
+      {%- if section.settings.show_social -%}
+        {% render 'social-icons' %}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_payment_icons -%}
+      <div class="footer__payments">
+        <span class="visually-hidden">{{ 'footer.payment_methods' | t }}</span>
+        {%- for type in shop.enabled_payment_types -%}
+          {{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="footer__legal">
+      <p class="footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ powered_by_link }}
+      </p>
+      {%- if section.settings.show_policies -%}
+        <ul class="footer__policies" role="list">
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li><a href="{{ policy.url }}">{{ policy.title }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
   </div>
 </footer>
 
@@ -25,8 +47,11 @@
 {
   "name": "Footer",
   "settings": [
+    { "type": "text", "id": "tagline", "label": "Tagline" },
     { "type": "checkbox", "id": "show_localization", "label": "Show country/language selectors", "default": true },
-    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true }
+    { "type": "checkbox", "id": "show_social", "label": "Show social links", "default": true },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "checkbox", "id": "show_policies", "label": "Show store policies", "default": true }
   ]
 }
 {% endschema %}

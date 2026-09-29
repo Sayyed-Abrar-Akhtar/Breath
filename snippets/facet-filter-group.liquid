@@ -1,0 +1,137 @@
+{%- comment -%}
+  Single facet filter group.
+  Uses the theme's disclosure primitive for progressive disclosure.
+
+  @param {object} filter - A filter object from collection.filters or search.filters
+
+  @example
+    {% render 'facet-filter-group', filter: filter %}
+{%- endcomment -%}
+
+{%- liquid
+  assign filter_id = 'facet-' | append: filter.param_name | handleize
+  assign is_open = false
+  if filter.active_values.size > 0
+    assign is_open = true
+  endif
+  if filter.type == 'price_range'
+    if filter.min_value.value != nil or filter.max_value.value != nil
+      assign is_open = true
+    endif
+  endif
+-%}
+
+{%- case filter.type -%}
+  {%- when 'list' -%}
+    {%- capture list_content -%}
+      <ul class="facets__list" role="list">
+        {%- for value in filter.values -%}
+          {%- liquid
+            assign value_id = filter_id | append: '-' | append: value.value | handleize
+            assign count_display = ''
+            if value.count != blank
+              assign count_display = value.count
+            endif
+          -%}
+          <li class="facets__item">
+            {% render 'checkbox',
+              name: value.param_name,
+              value: value.value,
+              id: value_id,
+              label: value.label,
+              checked: value.active,
+              count: count_display
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endcapture -%}
+
+    {% render 'disclosure',
+      id: filter_id,
+      title: filter.label,
+      content: list_content,
+      default_open: is_open,
+      class: 'facets__group'
+    %}
+
+  {%- when 'price_range' -%}
+    {%- capture price_content -%}
+      <div class="facets__price-range">
+        <div class="facets__price-field">
+          <label for="{{ filter_id }}-min" class="facets__price-label">
+            {{ 'facets.from' | t | default: 'From' }}
+          </label>
+          <span class="facets__price-currency">{{ cart.currency.symbol }}</span>
+          <input
+            type="number"
+            id="{{ filter_id }}-min"
+            name="{{ filter.min_value.param_name }}"
+            class="facets__price-input"
+            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+            min="0"
+            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+            step="1"
+            inputmode="numeric"
+            placeholder="0"
+          >
+        </div>
+
+        <div class="facets__price-field">
+          <label for="{{ filter_id }}-max" class="facets__price-label">
+            {{ 'facets.to' | t | default: 'To' }}
+          </label>
+          <span class="facets__price-currency">{{ cart.currency.symbol }}</span>
+          <input
+            type="number"
+            id="{{ filter_id }}-max"
+            name="{{ filter.max_value.param_name }}"
+            class="facets__price-input"
+            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+            min="0"
+            max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+            step="1"
+            inputmode="numeric"
+            placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+          >
+        </div>
+      </div>
+    {%- endcapture -%}
+
+    {% render 'disclosure',
+      id: filter_id,
+      title: filter.label,
+      content: price_content,
+      default_open: is_open,
+      class: 'facets__group facets__group--price'
+    %}
+
+  {%- when 'boolean' -%}
+    {%- capture boolean_content -%}
+      <ul class="facets__list" role="list">
+        {%- for value in filter.values -%}
+          {%- liquid
+            assign value_id = filter_id | append: '-' | append: value.value | handleize
+          -%}
+          <li class="facets__item">
+            {% render 'checkbox',
+              name: value.param_name,
+              value: value.value,
+              id: value_id,
+              label: value.label,
+              checked: value.active,
+              count: value.count
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endcapture -%}
+
+    {% render 'disclosure',
+      id: filter_id,
+      title: filter.label,
+      content: boolean_content,
+      default_open: is_open,
+      class: 'facets__group'
+    %}
+{%- endcase -%}

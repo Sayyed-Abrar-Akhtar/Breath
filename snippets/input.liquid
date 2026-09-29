@@ -1,0 +1,83 @@
+{%- comment -%}
+  Universal input primitive. Renders text, email, tel, number, password, search.
+
+  @param {string} name - Input name attribute
+  @param {string} [type] - 'text' | 'email' | 'tel' | 'number' | 'password' | 'search' (default: 'text')
+  @param {string} [id] - Input id (defaults to name)
+  @param {string} [label] - Visible label text
+  @param {string} [placeholder] - Placeholder text
+  @param {string} [value] - Pre-filled value
+  @param {string} [autocomplete] - Autocomplete hint
+  @param {boolean} [required] - Required field
+  @param {boolean} [disabled] - Disabled field
+  @param {string} [class] - Additional CSS classes
+  @param {string} [hint] - Helper text below input
+  @param {string} [error] - Error message (renders in error state)
+  @param {boolean} [label_visible] - Show label visually (default: true)
+  @param {string} [min] - Min value (number/range)
+  @param {string} [max] - Max value (number/range)
+  @param {string} [step] - Step value (number)
+  @param {string} [pattern] - HTML pattern attribute
+
+  @example
+    {% render 'input',
+      name: 'contact[email]',
+      type: 'email',
+      label: 'Email',
+      required: true,
+      autocomplete: 'email'
+    %}
+{%- endcomment -%}
+
+{%- liquid
+  assign input_type = type | default: 'text'
+  assign input_id = id | default: name | handleize
+  assign input_class = 'input'
+  if class != blank
+    assign input_class = input_class | append: ' ' | append: class
+  endif
+  if error != blank
+    assign input_class = input_class | append: ' input--error'
+  endif
+  assign show_label = label_visible | default: true, allow_false: true
+  if label == blank
+    assign show_label = false
+  endif
+-%}
+
+<div class="input-group">
+  {%- if show_label -%}
+    <label for="{{ input_id }}" class="input-group__label">
+      {{ label }}
+      {%- if required -%}<span aria-hidden="true">*</span>{%- endif -%}
+    </label>
+  {%- elsif label != blank -%}
+    <label for="{{ input_id }}" class="visually-hidden">{{ label }}</label>
+  {%- endif -%}
+
+  <input
+    type="{{ input_type }}"
+    id="{{ input_id }}"
+    name="{{ name }}"
+    class="{{ input_class }}"
+    {% if placeholder %}placeholder="{{ placeholder | escape }}"{% endif %}
+    {% if value %}value="{{ value | escape }}"{% endif %}
+    {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+    {% if required %}required{% endif %}
+    {% if disabled %}disabled{% endif %}
+    {% if min %}min="{{ min }}"{% endif %}
+    {% if max %}max="{{ max }}"{% endif %}
+    {% if step %}step="{{ step }}"{% endif %}
+    {% if pattern %}pattern="{{ pattern }}"{% endif %}
+    {% if error %}aria-invalid="true" aria-describedby="{{ input_id }}-error"{% endif %}
+    {% if hint and error == blank %}aria-describedby="{{ input_id }}-hint"{% endif %}
+  >
+
+  {%- if hint and error == blank -%}
+    <p class="input-group__hint" id="{{ input_id }}-hint">{{ hint }}</p>
+  {%- endif -%}
+
+  {%- if error -%}
+    <p class="input-group__error" id="{{ input_id }}-error" role="alert">{{ error }}</p>
+  {%- endif -%}
+</div>

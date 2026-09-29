@@ -1,11 +1,25 @@
 /* Breath — Main stylesheet. Imports in cascade order. */
 /* tokens.css and base.css are loaded separately in theme.liquid for FOUC prevention. */
+
 /* Utilities */
 @import url("icons.css");
+
+/* Form primitives */
+@import url("forms.css");
 
 /* Media pipeline */
 @import url("media.css");
 @import url("product-card.css");
+
+/* Sections */
+@import url("sections.css");
+@import url("hero.css");
+@import url("featured-product.css");
+@import url("image-with-text.css");
+@import url("rich-text.css");
+@import url("collection-list.css");
+@import url("video-section.css");
+@import url("apps.css");
 
 /* Components */
 @import url("signpost.css");
@@ -14,6 +28,9 @@
 @import url("header.css");
 @import url("footer.css");
 @import url("reveal.css");
+@import url("facets.css");
+@import url("cart-drawer.css");
+@import url("search-overlay.css");
 
 /* ── Disclosure Primitive ─────────────────────────────── */
 

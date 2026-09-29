@@ -34,7 +34,7 @@
           </h3>
 
           {%- if link.links.size > 0 -%}
-            <ul class="site-index__list site-index__list--level-2">
+            <ul class="site-index__list site-index__list--level-2" role="list">
               {%- for child in link.links -%}
                 <li class="site-index__item">
                   <a href="{{ child.url }}" class="site-index__link">
@@ -46,7 +46,7 @@
                   </a>
 
                   {%- if child.links.size > 0 -%}
-                    <ul class="site-index__list site-index__list--level-3">
+                    <ul class="site-index__list site-index__list--level-3" role="list">
                       {%- for grandchild in child.links -%}
                         <li class="site-index__item">
                           <a href="{{ grandchild.url }}" class="site-index__link">
@@ -74,12 +74,7 @@
 {
   "name": "Site Index",
   "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "The Index"
-    },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Index" },
     {
       "type": "link_list",
       "id": "menu",

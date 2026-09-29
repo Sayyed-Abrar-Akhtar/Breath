@@ -1,0 +1,23 @@
+<section class="main-page section" data-section-id="{{ section.id }}">
+  {% render 'wayfinder',
+    path: page.path,
+    next_step: page.next_step
+  %}
+
+  <div class="container container--narrow">
+    <header class="main-page__header">
+      <h1 class="main-page__title">{{ page.title }}</h1>
+    </header>
+
+    <div class="main-page__content rte">
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page",
+  "settings": []
+}
+{% endschema %}

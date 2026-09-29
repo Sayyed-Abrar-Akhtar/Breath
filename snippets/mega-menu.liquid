@@ -1,0 +1,49 @@
+{%- comment -%}
+  Mega menu — nested disclosures rendered as columns.
+  Used in the site index overlay and can be reused in the footer.
+
+  @param {link_list} menu - The menu object
+  @param {number} [columns] - Number of columns (default: 4)
+{%- endcomment -%}
+
+{%- liquid
+  assign columns = columns | default: 4
+-%}
+
+<disclosure-group class="mega-menu" data-accordion="false">
+  {%- for link in menu.links -%}
+    {%- assign disclosure_id = 'mega-' | append: link.title | handleize -%}
+
+    {%- capture submenu_content -%}
+      {%- if link.links.size > 0 -%}
+        <ul class="mega-menu__list" role="list">
+          {%- for child in link.links -%}
+            <li class="mega-menu__item">
+              <a href="{{ child.url }}" class="mega-menu__link">
+                {{ child.title }}
+              </a>
+              {%- if child.links.size > 0 -%}
+                <ul class="mega-menu__sublist" role="list">
+                  {%- for grandchild in child.links -%}
+                    <li>
+                      <a href="{{ grandchild.url }}" class="mega-menu__sublink">
+                        {{ grandchild.title }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endcapture -%}
+
+    {% render 'disclosure',
+      id: disclosure_id,
+      title: link.title,
+      content: submenu_content,
+      class: 'mega-menu__group'
+    %}
+  {%- endfor -%}
+</disclosure-group>

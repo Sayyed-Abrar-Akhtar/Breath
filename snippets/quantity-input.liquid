@@ -1,0 +1,57 @@
+{%- comment -%}
+  Quantity selector with +/- buttons.
+  Enhances to a web component; degrades to a plain number input.
+
+  @param {string} name - Input name
+  @param {number} [value] - Starting value (default: 1)
+  @param {number} [min] - Minimum (default: 1)
+  @param {number} [max] - Maximum (optional)
+  @param {string} [id] - Input id
+  @param {string} [class] - Additional CSS classes
+
+  @example
+    {% render 'quantity-input', name: 'quantity', value: 1, min: 1 %}
+{%- endcomment -%}
+
+{%- liquid
+  assign qty_id = id | default: 'quantity-' | append: name | handleize
+  assign qty_value = value | default: 1
+  assign qty_min = min | default: 1
+  assign qty_class = 'quantity'
+  if class != blank
+    assign qty_class = qty_class | append: ' ' | append: class
+  endif
+-%}
+
+<quantity-input class="{{ qty_class }}">
+  <button
+    type="button"
+    class="quantity__button"
+    name="decrement"
+    aria-label="{{ 'cart.quantity_decrease' | t | default: 'Decrease quantity' }}"
+  >
+    <span aria-hidden="true">&minus;</span>
+  </button>
+
+  <input
+    type="number"
+    id="{{ qty_id }}"
+    name="{{ name }}"
+    value="{{ qty_value }}"
+    min="{{ qty_min }}"
+    {% if max %}max="{{ max }}"{% endif %}
+    step="1"
+    class="quantity__input"
+    inputmode="numeric"
+    aria-label="{{ 'cart.quantity' | t | default: 'Quantity' }}"
+  >
+
+  <button
+    type="button"
+    class="quantity__button"
+    name="increment"
+    aria-label="{{ 'cart.quantity_increase' | t | default: 'Increase quantity' }}"
+  >
+    <span aria-hidden="true">&plus;</span>
+  </button>
+</quantity-input>
